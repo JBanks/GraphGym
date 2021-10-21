@@ -107,14 +107,14 @@ def load_dataset():
         if graphs is not None:
             return graphs
     # Load from Pytorch Geometric dataset
-    if format == 'PyG':
+    if format == 'PyG' or format[4:] == 'PyG':
         graphs = load_pyg(name, dataset_dir)
     # Load from networkx formatted data
     # todo: clean nx dataloader
-    elif format == 'nx':
+    elif format == 'nx' or format[4:] == 'nx':
         graphs = load_nx(name, dataset_dir)
     # Load from OGB formatted data
-    elif cfg.dataset.format == 'OGB':
+    elif cfg.dataset.format == 'OGB' or format[4:] == 'OGB':
         if cfg.dataset.name == 'ogbg-molhiv':
             dataset = PygGraphPropPredDataset(name=cfg.dataset.name)
             graphs = GraphDataset.pyg_to_graphs(dataset)
@@ -124,7 +124,6 @@ def load_dataset():
     else:
         raise ValueError('Unknown data format: {}'.format(cfg.dataset.format))
     return graphs
-
 
 def filter_graphs():
     '''
@@ -157,7 +156,7 @@ def transform_before_split(dataset):
     cfg.dataset.augment_feature_dims = actual_feat_dims
     if cfg.dataset.augment_label:
         cfg.dataset.augment_label_dims = actual_label_dim
-
+  
     # Temporary for ID-GNN path prediction task
     if cfg.dataset.task == 'edge' and 'id' in cfg.gnn.layer_type:
         dataset.apply_transform(path_len, update_graph=False,
@@ -211,6 +210,7 @@ def create_dataset():
         minimum_node_per_graph=min_node)
 
     ## Transform the whole dataset
+    #print(dataset)
     dataset = transform_before_split(dataset)
 
     ## Split dataset

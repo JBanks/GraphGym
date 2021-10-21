@@ -12,6 +12,7 @@ from tensorboardX import SummaryWriter
 from graphgym.utils.device import get_current_gpu_usage
 
 
+
 def setup_printing():
     logging.root.handlers = []
     logging_cfg = {'level': logging.INFO, 'format': '%(message)s'}
