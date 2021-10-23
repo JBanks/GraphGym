@@ -1,8 +1,10 @@
 import torch
+import tensorflow as tf
 from ogb.utils.features import get_atom_feature_dims, get_bond_feature_dims
 
 from graphgym.contrib.feature_encoder import *
 import graphgym.register as register
+from graphgym.config import cfg
 
 # Used for the OGB Encoders
 full_atom_feature_dims = get_atom_feature_dims()
@@ -31,6 +33,17 @@ class IntegerFeatureEncoder(torch.nn.Module):
         return batch
 
 
+class TFIntegerEncoder(tf.keras.Module):
+    """
+    TODO: Complete this feature encoder (super low priority, probably not used.  Check cfg.dataset.*_encoder) - JB
+    """
+    def __init__(self, emb_dim, num_classes=None):
+        super(TFIntegerEncoder, self).__init__()
+
+    def call(self, inputs):
+        pass
+
+
 class SingleAtomEncoder(torch.nn.Module):
     """
         Only encode the first dimension of atom integer features.
@@ -51,6 +64,17 @@ class SingleAtomEncoder(torch.nn.Module):
         batch.node_feature = self.atom_type_embedding(batch.node_feature[:, 0])
 
         return batch
+
+
+class TFSingleAtomEncoder(tf.keras.Module):
+    """
+    TODO: Complete this feature encoder (super low priority, probably not used.  Check cfg.dataset.*_encoder) - JB
+    """
+    def __init__(self, emb_dim, num_classes=None):
+        super(TFSingleAtomEncoder, self).__init__()
+
+    def call(self, inputs):
+        pass
 
 
 class AtomEncoder(torch.nn.Module):
@@ -81,6 +105,19 @@ class AtomEncoder(torch.nn.Module):
         return batch
 
 
+class TFAtomEncoder(tf.keras.Module):
+    """
+    TODO: Complete this feature encoder (super low priority, probably not used.  Check cfg.dataset.*_encoder) - JB
+    """
+    def __init__(self, emb_dim, num_classes=None):
+        super(TFAtomEncoder, self).__init__()
+
+        self.atom_embedding_list = tf.keras.Sequential()
+
+    def call(self, inputs):
+        pass
+
+
 class BondEncoder(torch.nn.Module):
 
     def __init__(self, emb_dim):
@@ -103,16 +140,29 @@ class BondEncoder(torch.nn.Module):
         return batch
 
 
+class TFBondEncoder(tf.keras.Module):
+    """
+    TODO: Complete this feature encoder (super low priority, probably not used.  Check cfg.dataset.*_encoder) - JB
+    """
+    def __init__(self, emb_dim):
+        super(TFBondEncoder, self).__init__()
+
+        self.bond_embedding_list = tf.keras.Sequential()
+
+    def call(self, inputs):
+        pass
+
+
 node_encoder_dict = {
-    'Integer': IntegerFeatureEncoder,
-    'SingleAtom': SingleAtomEncoder,
-    'Atom': AtomEncoder
+    'Integer': TFIntegerEncoder if cfg.dataset.format == 'TfG' else IntegerFeatureEncoder,
+    'SingleAtom': TFSingleAtomEncoder if cfg.dataset.format == 'TfG' else SingleAtomEncoder,
+    'Atom': TFAtomEncoder if cfg.dataset.format == 'TfG' else AtomEncoder
 }
 
 node_encoder_dict = {**register.node_encoder_dict, **node_encoder_dict}
 
 edge_encoder_dict = {
-    'Bond': BondEncoder
+    'Bond': TFBondEncoder if cfg.dataset.format == 'TfG' else BondEncoder
 }
 
 edge_encoder_dict = {**register.edge_encoder_dict, **edge_encoder_dict}

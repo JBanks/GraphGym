@@ -1,13 +1,17 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as F  # used for Normalize, leaky_relu, dropout - JB
 from torch.nn import Parameter
 from torch_scatter import scatter_add
-from torch_geometric.nn.conv import MessagePassing
+# Tensorflow has "tensor_scatter_add",
+# which is the same as "https://www.tensorflow.org/api_docs/python/tf/scatter_nd" - JB
+from torch_geometric.nn.conv import MessagePassing  # Graph base class.  Need to compare with tf.keras.Model
 from torch_geometric.utils import add_remaining_self_loops
 from torch_geometric.utils import remove_self_loops, add_self_loops, softmax
+# tf_geometric.utils supports add_self_loop_edge, and remove_self_loop_edge - JB
 
 from torch_geometric.nn.inits import glorot, zeros, reset
+# tf.keras.model appears to support these with "self.add_weight"
 
 from graphgym.config import cfg
 from graphgym.register import register_layer

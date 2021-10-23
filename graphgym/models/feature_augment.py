@@ -3,6 +3,7 @@ import networkx as nx
 import numpy as np
 import torch
 import torch.nn as nn
+import tensorflow as tf
 
 from deepsnap.graph import Graph
 
@@ -331,3 +332,18 @@ class Preprocess(nn.Module):
             [batch[name].float() for name in self.dim_dict],
             dim=1)
         return batch
+
+
+class TFPreprocess(tf.keras.Module):
+    """
+    TODO: finish implementation in tensorflow - JB
+    """
+    def __init__(self, dim_in):
+        super(TFPreprocess, self).__init__()
+        pass
+
+    def extra_repr(self):
+        pass
+
+    def call(self, inputs):
+        pass

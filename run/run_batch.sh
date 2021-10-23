@@ -8,7 +8,7 @@ SLEEP=1
 
 # generate configs (after controlling computational budget)
 # please remove --config_budget, if don't control computational budget
-python configs_gen.py --config configs/${CONFIG}.yaml \
+python3 configs_gen.py --config configs/${CONFIG}.yaml \
   --config_budget configs/${CONFIG}.yaml \
   --grid grids/${GRID}.txt \
   --out_dir configs
@@ -22,4 +22,4 @@ bash parallel.sh configs/${CONFIG}_grid_${GRID} $REPEAT $MAX_JOBS $SLEEP
 bash parallel.sh configs/${CONFIG}_grid_${GRID} $REPEAT $MAX_JOBS $SLEEP
 
 # aggregate results for the batch
-python agg_batch.py --dir results/${CONFIG}_grid_${GRID}
+python3 agg_batch.py --dir results/${CONFIG}_grid_${GRID}

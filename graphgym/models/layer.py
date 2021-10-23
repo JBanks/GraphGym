@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch_geometric as pyg
+import tensorflow as tf
+import tf_geometric as tfg
 
 from graphgym.config import cfg
 from graphgym.models.act import act_dict
@@ -14,6 +16,9 @@ import graphgym.register as register
 
 ## General classes
 class GeneralLayer(nn.Module):
+    """
+    TODO: convert all of these classes to work with tensorflow. - JB
+    """
     '''General wrapper for layers'''
 
     def __init__(self, name, dim_in, dim_out, has_act=True, has_bn=True,
@@ -47,7 +52,41 @@ class GeneralLayer(nn.Module):
         return batch
 
 
+class TFGeneralLayer(tf.keras.layers.Layer):
+    def __init__(self, name, dim_in, dim_out, has_act=True, has_bn=True,
+                 has_l2norm=False, **kwargs):
+        super(TFGeneralLayer, self).__init__()
+        self.has_l2norm = has_l2norm
+        has_bn = has_bn and cfg.gnn.batchnorm
+        self.sequential_layers = list()
+        self.sequential_layers.append(layer_dict[name](dim_in, dim_out,
+                                                       bias=not has_bn, **kwargs))
+
+        if self.has_l2norm:
+            self.sequential_layers.append(tf.keras.layers.Normalization(axis=1, p=2))
+        if has_bn:
+            # Axis may need to be '1'
+            self.sequential_layers.append(tf.keras.layers.BatchNormalization(axis=0,
+                                                                             epsilon=cfg.bn.eps,
+                                                                             momentum=cfg.bn.mom))
+        if cfg.gnn.dropout > 0:
+            self.sequential_layers.append(tf.keras.layers.Dropoout(cfg.gnn.dropout))
+        if has_act:
+            self.sequential_layers.append(act_dict[cfg.gnn.act])
+
+    def call(self, inputs):
+        h = inputs
+        for layer in self.sequential_layers:
+            h = layer(inputs)
+        if self.has_l2norm:
+            h = tf.math.l2_normalize(h)  # TODO: Confirm that this is correct - JB
+        return h
+
+
 class GeneralMultiLayer(nn.Module):
+    """
+    TODO: Convert this to tensorflow - JB
+    """
     '''General wrapper for stack of layers'''
 
     def __init__(self, name, num_layers, dim_in, dim_out, dim_inner=None,
@@ -67,6 +106,25 @@ class GeneralMultiLayer(nn.Module):
         return batch
 
 
+class TFGeneralMultiLayer(tf.keras.layers.Layer):
+    def __init__(self, name, num_layers, dim_in, dim_out, dim_inner=None,
+                 final_act=True, **kwargs):
+        super(TFGeneralMultiLayer, self).__init__()
+        self.sequential_layers = list()
+        dim_inner = dim_in if dim_inner is None else dim_inner
+        d_in = dim_in
+        for i in range(num_layers):
+            d_out = dim_out if i == num_layers - 1 else dim_inner
+            has_act = final_act if i == num_layers - 1 else True
+            self.sequential_layers.append(TFGeneralLayer(name, d_in, d_out, has_act, **kwargs))
+
+    def call(self, inputs):
+        h = inputs
+        for layer in self.sequential_layers:
+            h = layer(h)
+        return h
+
+
 ## Core basic layers
 # Input: batch; Output: batch
 class Linear(nn.Module):
@@ -80,6 +138,15 @@ class Linear(nn.Module):
         else:
             batch.node_feature = self.model(batch.node_feature)
         return batch
+
+
+class TFLinear(tf.keras.layers.Layer):
+    def __init__(self, dim_in, dim_out, bias=False, **kwargs):
+        super(TFLinear, self).__init__()
+        self.internal_layer = tf.keras.layers.Dense(dim_out, bias=bias)
+
+    def call(self, inputs):
+        return self.internal_layer(inputs)
 
 
 class BatchNorm1dNode(nn.Module):
@@ -132,6 +199,29 @@ class MLP(nn.Module):
         return batch
 
 
+class TFMLP(tf.keras.layers.Layer):
+    def __init__(self, dim_in, dim_out, bias=True, dim_inner=None,
+                 num_layers=2, **kwargs):
+        '''
+        Note: MLP works for 0 layers
+        '''
+        super(TFMLP, self).__init__()
+        dim_inner = dim_in if dim_inner is None else dim_inner
+        self.sequential_layers = list()
+        if num_layers > 1:
+            self.sequential_layers.append(TFGeneralMultiLayer('linear', num_layers - 1, dim_in, dim_inner,
+                                                              dim_inner, final_act=True))
+            self.sequential_layers.append(TFLinear(dim_inner, dim_out, bias))
+        else:
+            self.sequential_layers.append(TFLinear(dim_in, dim_out, bias))
+
+    def call(self, inputs):
+        h = inputs
+        for layer in self.sequential_layers:
+            h = layer(h)
+        return h
+
+
 class GCNConv(nn.Module):
     def __init__(self, dim_in, dim_out, bias=False, **kwargs):
         super(GCNConv, self).__init__()
@@ -140,6 +230,10 @@ class GCNConv(nn.Module):
     def forward(self, batch):
         batch.node_feature = self.model(batch.node_feature, batch.edge_index)
         return batch
+
+
+class TFGCNConv(tf.keras.layers.Layer):
+    pass
 
 
 class SAGEConv(nn.Module):
@@ -152,6 +246,10 @@ class SAGEConv(nn.Module):
         return batch
 
 
+class TFSAGEConv(tf.keras.layers.Layer):
+    pass
+
+
 class GATConv(nn.Module):
     def __init__(self, dim_in, dim_out, bias=False, **kwargs):
         super(GATConv, self).__init__()
@@ -160,6 +258,10 @@ class GATConv(nn.Module):
     def forward(self, batch):
         batch.node_feature = self.model(batch.node_feature, batch.edge_index)
         return batch
+
+
+class TFGATConv(tf.keras.layers.Layer):
+    pass
 
 
 class GINConv(nn.Module):
@@ -174,6 +276,10 @@ class GINConv(nn.Module):
         return batch
 
 
+class TFGINConv(tf.keras.layers.Layer):
+    pass
+
+
 class SplineConv(nn.Module):
     def __init__(self, dim_in, dim_out, bias=False, **kwargs):
         super(SplineConv, self).__init__()
@@ -186,6 +292,10 @@ class SplineConv(nn.Module):
         return batch
 
 
+class TFSplineConv(tf.keras.layers.Layer):
+    pass
+
+
 class GeneralConv(nn.Module):
     def __init__(self, dim_in, dim_out, bias=False, **kwargs):
         super(GeneralConv, self).__init__()
@@ -194,6 +304,10 @@ class GeneralConv(nn.Module):
     def forward(self, batch):
         batch.node_feature = self.model(batch.node_feature, batch.edge_index)
         return batch
+
+
+class TFGeneralConv(tf.keras.layers.Layer):
+    pass
 
 
 class GeneralEdgeConv(nn.Module):
@@ -205,6 +319,10 @@ class GeneralEdgeConv(nn.Module):
         batch.node_feature = self.model(batch.node_feature, batch.edge_index,
                                         edge_feature=batch.edge_feature)
         return batch
+
+
+class TFGeneralEdgeConv(tf.keras.layers.Layer):
+    pass
 
 
 class GeneralSampleEdgeConv(nn.Module):
@@ -221,17 +339,21 @@ class GeneralSampleEdgeConv(nn.Module):
         return batch
 
 
+class TFGeneralSampleEdgeConv(tf.keras.layers.Layer):
+    pass
+
+
 layer_dict = {
-    'linear': Linear,
-    'mlp': MLP,
-    'gcnconv': GCNConv,
-    'sageconv': SAGEConv,
-    'gatconv': GATConv,
-    'splineconv': SplineConv,
-    'ginconv': GINConv,
-    'generalconv': GeneralConv,
-    'generaledgeconv': GeneralEdgeConv,
-    'generalsampleedgeconv': GeneralSampleEdgeConv,
+    'linear': TFLinear if cfg.dataset.format == 'TfG' else Linear,
+    'mlp': TFMLP if cfg.dataset.format == 'TfG' else MLP,
+    'gcnconv': TFGCNConv if cfg.dataset.format == 'TfG' else  GCNConv,
+    'sageconv': TFSAGEConv if cfg.dataset.format == 'TfG' else SAGEConv,
+    'gatconv': TFGATConv if cfg.dataset.format == 'TfG' else GATConv,
+    'splineconv': TFSplineConv if cfg.dataset.format == 'TfG' else SplineConv,
+    'ginconv': TFGINConv if cfg.dataset.format == 'TfG' else GINConv,
+    'generalconv': TFGeneralConv if cfg.dataset.format == 'TfG' else GeneralConv,
+    'generaledgeconv': TFGeneralEdgeConv if cfg.dataset.format == 'TfG' else GeneralEdgeConv,
+    'generalsampleedgeconv': TFGeneralSampleEdgeConv if cfg.dataset.format == 'TfG' else GeneralSampleEdgeConv,
 }
 
 # register additional convs

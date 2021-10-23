@@ -1,10 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import tensorflow as tf
+import tf_geometric as tfg
+import tf_geometric.nn as tfg_nn
 
 from graphgym.config import cfg
 from graphgym.models.head import head_dict
-from graphgym.models.layer import (GeneralLayer, GeneralMultiLayer,
+from graphgym.models.layer import (GeneralLayer, TFGeneralLayer, GeneralMultiLayer, TFGeneralMultiLayer,
                                    BatchNorm1dNode, BatchNorm1dEdge)
 from graphgym.models.act import act_dict
 from graphgym.models.feature_augment import Preprocess
@@ -17,12 +20,18 @@ import graphgym.register as register
 
 ########### Layer ############
 def GNNLayer(dim_in, dim_out, has_act=True):
-    return GeneralLayer(cfg.gnn.layer_type, dim_in, dim_out, has_act)
+    if cfg.dataset.format == 'TfG':
+        return TFGeneralLayer(cfg.gnn.layer_type, dim_in, dim_out, has_act)
+    else:
+        return GeneralLayer(cfg.gnn.layer_type, dim_in, dim_out, has_act)
 
 
 def GNNPreMP(dim_in, dim_out):
-    return GeneralMultiLayer('linear', cfg.gnn.layers_pre_mp,
-                             dim_in, dim_out, dim_inner=dim_out, final_act=True)
+    if cfg.dataset.format == 'TfG':
+        return None
+    else:
+        return GeneralMultiLayer('linear', cfg.gnn.layers_pre_mp,
+                                 dim_in, dim_out, dim_inner=dim_out, final_act=True)
 
 
 ########### Block: multiple layers ############
@@ -81,6 +90,28 @@ class GNNStackStage(nn.Module):
         return batch
 
 
+class TFGNNStackStage(tf.keras.layers.Layer):
+    """
+    TODO: Implement this in tensorflow (high priority) - JB
+    Perhaps this should be a wrapper to build one layer out of many layers
+    """
+    def __init__(self, dim_in, dim_out, num_layers):
+        super(TFGNNStackStage, self).__init()
+        d_in = dim_in
+        self.stack_list = list()
+        for i in range(num_layers):
+            self.stack_list.append(GNNLayer(d_in, dim_out))
+            d_in = dim_out
+
+    def call(self, inputs):
+        h = inputs
+        for layer in self.stack_list:
+            h = layer(h)
+        if cfg.gnn.l2norm:
+            pass  # TODO: normalize for l2norm
+        return h
+
+
 class GNNSkipStage(nn.Module):
     ''' Stage with skip connections'''
 
@@ -110,7 +141,7 @@ class GNNSkipStage(nn.Module):
 
 
 stage_dict = {
-    'stack': GNNStackStage,
+    'stack': TFGNNStackStage if cfg.dataset.format == 'TfG' else GNNStackStage,
     'skipsum': GNNSkipStage,
     'skipconcat': GNNSkipStage,
 }
@@ -166,3 +197,56 @@ class GNN(nn.Module):
         for module in self.children():
             batch = module(batch)
         return batch
+
+
+class TFGNN(tf.keras.Model):
+    """
+    TODO: Complete this implementation.  Should use heads and stacks (maybe) - JB
+    """
+    def __init__(self, dim_in, dim_out, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # This section doesn't need to be split into its own function right now.
+        d_in = dim_in
+        self.stack_list = list()
+
+        # Node and Edge encodings will be evaluated later if required.  by default they are both False
+
+        # Pre-MessagePassing
+        dim_inner = dim_in if cfg.gnn.dim_inner is None else cfg.gnn.dim_inner
+        for i in range(cfg.gnn.layers_pre_mp):
+            d_in = dim_in if i == 0 else dim_inner
+            d_out = dim_out if i == cfg.gnn.layers_pre_mp - 1 else dim_inner
+            has_act = True if i == cfg.gnn.layers_pre_mp - 1 else True
+            self.stack_list.append(tf.keras.layers.Linear(d_out, use_bias=not cfg.gnn.batchnorm))
+            if cfg.gnn.batchnorm:
+                self.stack_list.append(tf.keras.layers.Batchnorm(dim_out))  # Add eps and momentum
+            if cfg.gnn.dropout > 0:
+                self.stack_list.append(tf.keras.layers.Dropoout(cfg.gnn.dropout))
+            self.stack_list.append(act_dict[cfg.gnn.act])
+            d_in = dim_out
+
+        # MessagePassing
+        for i in range(cfg.gnn.layers_mp):
+            self.stack_list.append(tfg.layers.GCN(dim_out, use_bias=not cfg.gnn.batchnorm))
+            # layer_dict[name](d_in, dim_out,
+            #                           bias=not has_bn, **kwargs)
+            if cfg.gnn.batchnorm:
+                self.stack_list.append(tf.keras.layers.Batchnorm(dim_out))  # Add eps and momentum
+            if cfg.gnn.dropout > 0:
+                self.stack_list.append(tf.keras.layers.Dropoout(cfg.gnn.dropout))
+            self.stack_list.append(act_dict[cfg.gnn.act])
+            d_in = dim_out
+
+        # Post-MessagePassing
+        dim_inner = dim_in if cfg.gnn.dim_inner is None else cfg.gnn.dim_inner
+
+        self.stack_list.append(tf.keras.layers.Linear(dim_inner,
+                                                      num_layers=cfg.gnn.layers_post_mp, bias=True))
+
+    def call(self, inputs, training=None, mask=None, cache=None):
+        h, edge_index, edge_weight = inputs
+        for layer in self.stack_list:
+            h = self.dropout(h, training=training)
+            h = layer([h, edge_index, edge_weight], cache=cache)
+
+        return h

@@ -95,6 +95,7 @@ def set_cfg(cfg):
 
     # if PyG: look for it in Pytorch Geometric dataset
     # if NetworkX/nx: load data in NetworkX format
+    # if tfG: use tf_geometric
     cfg.dataset.format = 'PyG'
 
     # Dir to load the dataset. If the dataset is downloaded, this is the

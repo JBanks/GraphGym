@@ -1,14 +1,17 @@
 import torch
+import tf_geometric
 
 from graphgym.config import cfg
 from graphgym.models.gnn import GNN
+from graphgym.models.gnn import TFGNN
 
 from graphgym.contrib.network import *
 import graphgym.register as register
 
 network_dict = {
-    'gnn': GNN,
+    'gnn': TFGNN if cfg.datasets.type == 'TfG' else GNN,
 }
+
 network_dict = {**register.network_dict, **network_dict}
 
 
@@ -20,6 +23,7 @@ def create_model(datasets=None, to_device=True, dim_in=None, dim_out=None):
         dim_out = 1
 
     model = network_dict[cfg.model.type](dim_in=dim_in, dim_out=dim_out)
-    if to_device:
+    # TODO: Find out how to connect a tensorflow model to a device - JB
+    if to_device and cfg.dataset.model != 'TfG':
         model.to(torch.device(cfg.device))
     return model

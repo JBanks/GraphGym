@@ -2,6 +2,7 @@ import os
 import random
 import numpy as np
 import torch
+import tensorflow as tf
 import logging
 
 from graphgym.cmd_args import parse_args
@@ -17,7 +18,6 @@ from graphgym.utils.comp_budget import params_count
 from graphgym.utils.device import auto_select_device
 from graphgym.contrib.train import *
 from graphgym.register import train_dict
-
 if __name__ == '__main__':
     # Load cmd line args
     args = parse_args()
@@ -28,12 +28,18 @@ if __name__ == '__main__':
         cfg.merge_from_list(args.opts)
         assert_cfg(cfg)
         # Set Pytorch environment
-        torch.set_num_threads(cfg.num_threads)
+        if cfg.datasets.format == 'TfG':
+            tf.config.threading.set_inter_op_parallelism_threads(cfg.num_threads)
+        else:
+            torch.set_num_threads(cfg.num_threads)
         out_dir_parent = cfg.out_dir
         cfg.seed = i + 1
         random.seed(cfg.seed)
         np.random.seed(cfg.seed)
-        torch.manual_seed(cfg.seed)
+        if cfg.datasets.format == 'TfG':
+            tf.random.set_seed(cfg.seed)
+        else:
+            torch.manual_seed(cfg.seed)
         update_out_dir(out_dir_parent, args.cfg_file)
         dump_cfg(cfg)
         setup_printing()

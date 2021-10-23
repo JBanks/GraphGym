@@ -5,6 +5,7 @@ They are constructed in the init function of the gnn.GNN.
 
 import torch
 import torch.nn as nn
+import tensorflow as tf
 
 from graphgym.config import cfg
 from graphgym.models.layer import MLP
@@ -35,6 +36,20 @@ class GNNNodeHead(nn.Module):
         batch = self.layer_post_mp(batch)
         pred, label = self._apply_index(batch)
         return pred, label
+
+
+class TFGNNNodeHead(tf.keras.Model):
+    """
+    TODO: implement in tensorflow - Higher priority - JB
+    """
+    def __init__(self, dim_in, dim_out):
+        super(TFGNNGraphHead, self).__init__()
+
+    def _apply_index(self, inputs):
+        pass
+
+    def call(self, inputs):
+        pass
 
 
 class GNNEdgeHead(nn.Module):
@@ -90,6 +105,20 @@ class GNNEdgeHead(nn.Module):
         return pred, label
 
 
+class TFGNNEdgeHead(tf.keras.Model):
+    """
+    TODO: implement in tensorflow - Do this one last - JB
+    """
+    def __init__(self, dim_in, dim_out):
+        super(TFGNNEdgeHead, self).__init__()
+
+    def _apply_index(self, inputs):
+        pass
+
+    def call(self, inputs):
+        pass
+
+
 class GNNGraphHead(nn.Module):
     '''Head of GNN, graph prediction
 
@@ -119,12 +148,26 @@ class GNNGraphHead(nn.Module):
         return pred, label
 
 
+class TFGNNGraphHead(tf.keras.Model):
+    """
+    TODO: implement in tensorflow - JB
+    """
+    def __init__(self, dim_in, dim_out):
+        super(TFGNNGraphHead, self).__init__()
+
+    def _apply_index(self, inputs):
+        pass
+
+    def call(self, inputs):
+        pass
+
+
 # Head models for external interface
 head_dict = {
-    'node': GNNNodeHead,
-    'edge': GNNEdgeHead,
-    'link_pred': GNNEdgeHead,
-    'graph': GNNGraphHead
+    'node': TFGNNNodeHead if cfg.dataset.format == 'TfG' else GNNNodeHead,
+    'edge': TFGNNEdgeHead if cfg.dataset.format == 'TfG' else GNNEdgeHead,
+    'link_pred': TFGNNEdgeHead if cfg.dataset.format == 'TfG' else GNNEdgeHead,
+    'graph': TFGNNGraphHead if cfg.dataset.format == 'TfG' else GNNGraphHead
 }
 
 head_dict = {**register.head_dict, **head_dict}
