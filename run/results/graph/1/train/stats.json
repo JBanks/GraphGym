@@ -1,0 +1,4 @@
+{"epoch": 0, "eta": 432.9715, "loss": 2.7077, "lr": 0.1, "params": 134026, "time_iter": 0.0619, "accuracy": 0.2475}
+{"epoch": 1, "eta": 396.4842, "loss": 1.756, "lr": 0.1, "params": 134026, "time_iter": 0.0516, "accuracy": 0.355}
+{"epoch": 2, "eta": 384.0571, "loss": 1.6707, "lr": 0.1, "params": 134026, "time_iter": 0.0516, "accuracy": 0.3025}
+{"epoch": 3, "eta": 377.9666, "loss": 1.4764, "lr": 0.1, "params": 134026, "time_iter": 0.0518, "accuracy": 0.3875}

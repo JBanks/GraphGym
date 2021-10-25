@@ -20,7 +20,7 @@ from graphgym.register import train_dict
 import tensorflow as tf
 import tf_geometric as tfg
 
-repeat = 1
+repeat = 3
 
 
 class GCNModel(tf.keras.Model):
@@ -78,6 +78,9 @@ class APPNPModel(tf.keras.Model):
         h = self.appnp([x, edge_index, edge_weight], training=training, cache=cache)
         return h
 
+    
+acc_lists = []
+max_acc = []
 for i in range(repeat):
     # Load config file
     cfg.merge_from_file('node.yaml')
@@ -101,7 +104,7 @@ for i in range(repeat):
     loaders = create_loader(datasets)
     meters = create_logger(datasets)
     #model = create_model(datasets)
-    model = GCNModel(datasets)
+    model = GATModel(datasets)
     #optimizer = create_optimizer(model.parameters())
     optimizer = tf.keras.optimizers.Adam(learning_rate=cfg.optim.base_lr)
     #print(cfg.optim.base_lr)
@@ -115,7 +118,15 @@ for i in range(repeat):
     #logging.info('Num parameters: {}'.format(cfg.params))    
     
     if cfg.train.mode == 'standard':
-        train(meters, loaders, model, optimizer,datasets)
+        acc_list = train(meters, loaders, model, optimizer,datasets)
+        acc_lists.append(acc_list)
+        max_acc.append(max(acc_list))
     else:
         train_dict[cfg.train.mode](
             meters, loaders, model, optimizer, scheduler)
+np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
+np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
+
+
+

@@ -1,16 +1,12 @@
 out_dir: results
 dataset:
-  format: nx
-  name: ws
-  task: node
+  format: PyG
+  name: TU_BZR
+  task: graph
   task_type: classification
-  transductive: False
+  transductive: True
   split: [0.8, 0.2]
-  augment_feature: []
-  augment_feature_dims: [10]
-  augment_feature_repr: original
-  augment_label: node_clustering_coefficient
-  augment_label_dims: 10
+
   transform: ego
 train:
   batch_size: 128
@@ -26,7 +22,7 @@ gnn:
   layers_mp: 3
   layers_post_mp: 1
   dim_inner: 128
-  layer_type: idconv
+  layer_type: gcnidconv
   stage_type: stack
   batchnorm: True
   act: relu

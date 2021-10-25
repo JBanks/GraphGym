@@ -1,0 +1,203 @@
+GPU Mem: [123]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 123
+Load: 0.1883s, Before split: 2.132s, Split: 0.0002446s, After split: 52.28s
+GNN(
+  (preprocess): Preprocess(
+    node_feature: dim_out=1
+    Total: dim_out=1
+  )
+  (pre_mp): GeneralMultiLayer(
+    (Layer_0): GeneralLayer(
+      (layer): Linear(
+        (model): Linear(in_features=1, out_features=128, bias=False)
+      )
+      (post_layer): Sequential(
+        (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (1): ReLU()
+      )
+    )
+  )
+  (mp): GNNStackStage(
+    (layer0): GeneralLayer(
+      (layer): GeneralIDConv(
+        (model): GeneralIDConvLayer(128, 128)
+      )
+      (post_layer): Sequential(
+        (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (1): ReLU()
+      )
+    )
+    (layer1): GeneralLayer(
+      (layer): GeneralIDConv(
+        (model): GeneralIDConvLayer(128, 128)
+      )
+      (post_layer): Sequential(
+        (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (1): ReLU()
+      )
+    )
+    (layer2): GeneralLayer(
+      (layer): GeneralIDConv(
+        (model): GeneralIDConvLayer(128, 128)
+      )
+      (post_layer): Sequential(
+        (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (1): ReLU()
+      )
+    )
+  )
+  (post_mp): GNNGraphHead(
+    (layer_post_mp): MLP(
+      (model): Sequential(
+        (0): GeneralMultiLayer(
+          (Layer_0): GeneralLayer(
+            (layer): Linear(
+              (model): Linear(in_features=128, out_features=128, bias=False)
+            )
+            (post_layer): Sequential(
+              (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (1): ReLU()
+            )
+          )
+          (Layer_1): GeneralLayer(
+            (layer): Linear(
+              (model): Linear(in_features=128, out_features=128, bias=False)
+            )
+            (post_layer): Sequential(
+              (0): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (1): ReLU()
+            )
+          )
+        )
+        (1): Linear(
+          (model): Linear(in_features=128, out_features=10, bias=True)
+        )
+      )
+    )
+  )
+)
+bn:
+  eps: 1e-05
+  mom: 0.1
+cfg_dest: config.yaml
+dataset:
+  augment_feature: []
+  augment_feature_dims: []
+  augment_feature_repr: position
+  augment_label: graph_path_len
+  augment_label_dims: 1
+  cache_load: False
+  cache_save: False
+  dir: ./datasets
+  edge_dim: 128
+  edge_encoder: False
+  edge_encoder_bn: True
+  edge_encoder_name: Bond
+  edge_message_ratio: 0.8
+  edge_negative_sampling_ratio: 1.0
+  edge_train_mode: all
+  encoder_dim: 128
+  format: nx
+  name: ba500
+  node_encoder: False
+  node_encoder_bn: True
+  node_encoder_name: Atom
+  remove_feature: False
+  resample_disjoint: False
+  resample_negative: False
+  shuffle_split: True
+  split: [0.8, 0.2]
+  task: graph
+  task_type: classification
+  to_undirected: False
+  transductive: False
+  transform: ego
+  tu_simple: True
+device: cuda:0
+example_arg: example
+example_group:
+  example_arg: example
+gnn:
+  act: relu
+  agg: add
+  att_final_linear: False
+  att_final_linear_bn: False
+  att_heads: 1
+  batchnorm: True
+  dim_inner: 128
+  dropout: 0.0
+  flow: source_to_target
+  keep_edge: 0.5
+  l2norm: True
+  layer_type: idconv
+  layers_mp: 3
+  layers_post_mp: 3
+  layers_pre_mp: 1
+  msg_direction: single
+  normalize_adj: False
+  self_msg: concat
+  skip_every: 1
+  stage_type: stack
+gpu_mem: False
+mem:
+  inplace: False
+metric_agg: argmax
+metric_best: auto
+model:
+  edge_decoding: dot
+  graph_pooling: add
+  loss_fun: cross_entropy
+  match_upper: True
+  size_average: mean
+  thresh: 0.5
+  type: gnn
+num_threads: 6
+num_workers: 0
+optim:
+  base_lr: 0.1
+  lr_decay: 0.1
+  max_epoch: 1000
+  momentum: 0.9
+  optimizer: adam
+  scheduler: cos
+  steps: [30, 60, 90]
+  weight_decay: 0.0005
+out_dir: results/graph/1
+print: both
+round: 4
+seed: 1
+share:
+  dim_in: 1
+  dim_out: 1
+  num_splits: 1
+tensorboard_agg: True
+tensorboard_each_run: False
+train:
+  auto_resume: False
+  batch_size: 64
+  ckpt_clean: True
+  ckpt_period: 100
+  epoch_resume: -1
+  eval_period: 20
+  iter_per_epoch: 32
+  mode: standard
+  neighbor_sizes: [20, 15, 10, 5]
+  node_per_graph: 32
+  radius: extend
+  sample_node: False
+  sampler: full_batch
+  walk_length: 4
+val:
+  node_per_graph: 32
+  radius: extend
+  sample_node: False
+  sampler: full_batch
+view_emb: False
+Num parameters: 134026
+Start from epoch 0
+train: {'epoch': 0, 'eta': 432.9715, 'loss': 2.7077, 'lr': 0.1, 'params': 134026, 'time_iter': 0.0619, 'accuracy': 0.2475}
+val: {'epoch': 0, 'loss': 139.0797, 'lr': 0, 'params': 134026, 'time_iter': 0.0235, 'accuracy': 0.11}
+train: {'epoch': 1, 'eta': 396.4842, 'loss': 1.756, 'lr': 0.1, 'params': 134026, 'time_iter': 0.0516, 'accuracy': 0.355}
+train: {'epoch': 2, 'eta': 384.0571, 'loss': 1.6707, 'lr': 0.1, 'params': 134026, 'time_iter': 0.0516, 'accuracy': 0.3025}
+train: {'epoch': 3, 'eta': 377.9666, 'loss': 1.4764, 'lr': 0.1, 'params': 134026, 'time_iter': 0.0518, 'accuracy': 0.3875}

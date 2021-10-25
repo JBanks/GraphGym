@@ -99,6 +99,7 @@ def load_dataset():
     '''
     format = cfg.dataset.format
     name = cfg.dataset.name
+    print(name)
     # dataset_dir = '{}/{}'.format(cfg.dataset.dir, name)
     dataset_dir = cfg.dataset.dir
     # Try to load customized data format

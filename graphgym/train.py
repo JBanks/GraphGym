@@ -101,6 +101,7 @@ remove scheduler
 '''
 def train(loggers, loaders, model, optimizer,datasets):
     start_epoch = 0
+    valid_acc_list = []
     #if cfg.train.auto_resume:
     #    start_epoch = load_ckpt(model, optimizer, scheduler)
     if start_epoch == cfg.optim.max_epoch:
@@ -120,7 +121,10 @@ def train(loggers, loaders, model, optimizer,datasets):
                 if not cfg.dataset.format[:3] == 'Tfg':
                     eval_epoch(loggers[i], loaders[i], model)
                 else:
-                    print(f'epoch {cur_epoch}, acc:{eval_epoch_Tfg(loaders[i],model).numpy()}')
+                    valid_acc = eval_epoch_Tfg(loaders[i],model).numpy()
+                    valid_acc_list.append(valid_acc)
+                    print(f'epoch {cur_epoch}, acc:{valid_acc}')
+                
                 #loggers[i].write_epoch(cur_epoch)
         #if is_ckpt_epoch(cur_epoch):
         #    save_ckpt(model, optimizer, scheduler, cur_epoch)
@@ -128,7 +132,7 @@ def train(loggers, loaders, model, optimizer,datasets):
         logger.close()
     if cfg.train.ckpt_clean:
         clean_ckpt()
-
     logging.info('Task done, results saved in {}'.format(cfg.out_dir))
-
+    print(f'The best validation accuracy is {max(valid_acc_list)}, the epoch is {10*valid_acc_list.index(max(valid_acc_list))}')
+    return valid_acc_list
 

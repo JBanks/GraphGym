@@ -1,14 +1,14 @@
 out_dir: results
 dataset:
-  format: Tfg-PyG
-  name: TU_ENZYMES
+  format: Tfg-nx
+  name: ba500
   task: node
   task_type: classification
   transductive: False
   split: [0.8, 0.2]
   augment_feature: ['node_identity']
   augment_feature_dims: [10]
-  augment_feature_repr: original
+  #augment_feature_repr: original
   augment_label: node_clustering_coefficient
   augment_label_dims: 10
   transform: none
@@ -26,7 +26,7 @@ gnn:
   layers_mp: 3
   layers_post_mp: 1
   dim_inner: 128
-  layer_type: gcnconv
+  layer_type: Tfg-idgatfast
   stage_type: stack
   batchnorm: True
   act: relu
@@ -38,3 +38,17 @@ optim:
   optimizer: adam
   base_lr: 0.01
   max_epoch: 1000
+  
+  
+  
+  
+  
+
+
+#dataset.augment_feature feature [[],['node_identity']]
+#dataset.augment_label label ['node_clustering_coefficient']
+#gnn.layers_pre_mp l_pre [1]
+#gnn.layers_mp l_mp [2]
+#gnn.layers_post_mp l_post [1]
+#gnn.layer_type layer ['gatconv']
+#optim.max_epoch epoch [1000]
