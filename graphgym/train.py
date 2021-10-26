@@ -39,9 +39,12 @@ def train_epoch_Tfg(logger, loader, model, optimizer,datasets):
     loss_s = 0
     time_start = time.time()
     for batch in loader:
-        graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
+        if cfg.dataset.augment_feature != []:
+            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
+            graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
+        else:
+            graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         with tf.GradientTape() as tape:
-
             logits = model([graph.x, graph.edge_index, graph.edge_weight], training=True)
             #print(logits)
             loss = compute_loss_Tfg(logits, batch.node_label_index, batch.node_label, tape.watched_variables(),datasets)
@@ -80,7 +83,11 @@ def eval_epoch(logger, loader, model):
 def eval_epoch_Tfg(loader,model):
     accuracy_sum = 0
     for batch in loader:
-        graph = Graph(x=batch.node_feature.numpy(), 
+        if cfg.dataset.augment_feature != []:
+            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
+            graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
+        else:
+            graph = Graph(x=batch.node_feature.numpy(), 
                                       edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())    
         logits = model([graph.x, graph.edge_index, graph.edge_weight], training=False)
         masked_logits = tf.gather(logits, batch.node_label_index)
