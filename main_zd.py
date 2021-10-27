@@ -28,40 +28,39 @@ class GCNModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.gcn0 = tfg.layers.GCN(128, activation=tf.nn.relu)
-        self.gcn1 = tfg.layers.GCN(datasets[0].num_labels)
-        #self.dropout = tf.keras.layers.Dropout(drop_rate)
+        self.gcn1 = tfg.layers.GCN(128, activation=tf.nn.relu)
+        self.gcn2 = tfg.layers.GCN(128, activation=tf.nn.relu)
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
+                                               ,tf.keras.layers.Dense(256, activation='relu')
+                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, edge_weight = inputs
-        #h = self.dropout(x, training=training)
-        h = self.gcn0([x, edge_index, edge_weight], cache=cache)
-        #h = self.dropout(h, training=training)
+        h = self.gcn0([x, edge_index, edge_weight], cache=cache)  
         h = self.gcn1([h, edge_index, edge_weight], cache=cache)
+        h = self.gcn2([h, edge_index, edge_weight], cache=cache)
+        h = self.mlp(h)
         return h
-
     
     
 class GATModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gat0 = tfg.layers.GAT(64, activation=tf.nn.relu, num_heads=8, attention_units=8, drop_rate=0)
-        self.gat1 = tfg.layers.GAT(datasets[0].num_labels, num_heads=1, attention_units=1, drop_rate=0)
+        self.gat0 = tfg.layers.GAT(128, activation=tf.nn.relu)
+        self.gat1 = tfg.layers.GAT(128, activation=tf.nn.relu)
+        self.gat2 = tfg.layers.GAT(128, activation=tf.nn.relu)
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
+                                               ,tf.keras.layers.Dense(256, activation='relu')
+                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
 
-        # The GAT paper mentioned that: "Specially, if we perform multi-head attention on the final (prediction) layer of
-        # the network, concatenation is no longer sensible - instead, we employ averaging".
-        # In tf_geometric, if you want to set num_heads > 1 for the last output GAT layer, you can set split_value_heads=False
-        # as follows to employ averaging instead of concatenation.
-        # self.gat1 = tfg.layers.GAT(num_classes, num_heads=8, attention_units=8, split_value_heads=False, drop_rate=drop_rate)
-
-        #self.dropout = tf.keras.layers.Dropout(drop_rate)
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index,_ = inputs
-        #h = self.dropout(x, training=training)
         h = self.gat0([x, edge_index], training=training)
-        #h = self.dropout(h, training=training)
         h = self.gat1([h, edge_index], training=training)
+        h = self.gat2([h, edge_index], training=training)
+        h = self.mlp(h)
         return h
 
 class APPNPModel(tf.keras.Model):
@@ -104,7 +103,7 @@ for i in range(repeat):
     loaders = create_loader(datasets)
     meters = create_logger(datasets)
     #model = create_model(datasets)
-    model = GATModel(datasets)
+    model = GCNModel(datasets)
     #optimizer = create_optimizer(model.parameters())
     optimizer = tf.keras.optimizers.Adam(learning_rate=cfg.optim.base_lr)
     #print(cfg.optim.base_lr)
