@@ -1096,3 +1096,1022 @@ Random select GPU, select GPU 0 with mem: 2498
 node_clustering_coefficient_label dimensions are collapsed due to balanced binning
 Load: 0.4503s, Before split: 0.2357s, Split: 0.0001185s, After split: 6.914e-06s
 Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1379s, Before split: 0.2905s, Split: 0.000108s, After split: 6.437e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1362s, Before split: 0.2856s, Split: 0.0001087s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1747s, Before split: 0.2705s, Split: 9.751e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1779s, Before split: 0.2714s, Split: 9.608e-05s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1401s, Before split: 0.1622s, Split: 9.99e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01534s, Before split: 0.3199s, Split: 9.704e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01533s, Before split: 0.1602s, Split: 0.0001121s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1365s, Before split: 0.2875s, Split: 0.0001042s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1796s, Before split: 0.2778s, Split: 9.584e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1793s, Before split: 0.2745s, Split: 9.036e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01443s, Before split: 0.4039s, Split: 0.0001042s, After split: 9.06e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.0166s, Before split: 0.4946s, Split: 0.000109s, After split: 1.025e-05s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01512s, Before split: 0.4549s, Split: 0.0001006s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2694s, Before split: 0.166s, Split: 9.823e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1417s, Before split: 0.1548s, Split: 0.0001216s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1402s, Before split: 0.4195s, Split: 0.0001059s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.319s, Before split: 0.2354s, Split: 0.0001025s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.359s, Before split: 0.231s, Split: 9.251e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1904s, Before split: 0.4043s, Split: 9.513e-05s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1915s, Before split: 1.004s, Split: 0.0009401s, After split: 3.409e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05118s, Before split: 0.9989s, Split: 0.0002553s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05225s, Before split: 1.009s, Split: 0.0002398s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2313s, Before split: 1.993s, Split: 0.0005794s, After split: 1.073e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.09719s, Before split: 1.758s, Split: 0.0008793s, After split: 2.789e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2469s, Before split: 1.7s, Split: 0.0002308s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2248s, Before split: 1.873s, Split: 0.0004778s, After split: 1.001e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.09686s, Before split: 1.671s, Split: 0.0002751s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2425s, Before split: 1.669s, Split: 0.0002263s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1839s, Before split: 1.048s, Split: 0.000469s, After split: 9.775e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05234s, Before split: 0.9267s, Split: 0.000325s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05147s, Before split: 0.9434s, Split: 0.000241s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3124s, Before split: 0.2258s, Split: 0.0001025s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3499s, Before split: 0.2263s, Split: 9.632e-05s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1882s, Before split: 0.4649s, Split: 0.0001309s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2716s, Before split: 0.2043s, Split: 0.0001011s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1446s, Before split: 0.1688s, Split: 0.0001116s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1424s, Before split: 0.322s, Split: 9.06e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1424s, Before split: 0.2919s, Split: 0.0001178s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.248s, Before split: 0.2657s, Split: 0.0001223s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.256s, Before split: 0.2733s, Split: 0.0001156s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01956s, Before split: 0.4043s, Split: 0.000108s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2486s, Before split: 0.2613s, Split: 0.0001132s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01654s, Before split: 0.5124s, Split: 0.000114s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1875s, Before split: 1.162s, Split: 0.0001938s, After split: 7.391e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05757s, Before split: 1.23s, Split: 0.000169s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.06126s, Before split: 1.29s, Split: 0.0001891s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1779s, Before split: 0.8035s, Split: 0.0001757s, After split: 9.298e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05804s, Before split: 0.7978s, Split: 0.0001554s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.246s, Before split: 0.6451s, Split: 0.0001583s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1737s, Before split: 0.8741s, Split: 0.0001786s, After split: 9.298e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05323s, Before split: 0.8733s, Split: 0.0001562s, After split: 6.914e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1824s, Before split: 0.9089s, Split: 0.0001919s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05453s, Before split: 0.9301s, Split: 0.0001571s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2367s, Before split: 0.8835s, Split: 0.0001602s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1736s, Before split: 0.8812s, Split: 0.00017s, After split: 7.153e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1773s, Before split: 1.231s, Split: 0.0001717s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05464s, Before split: 1.251s, Split: 0.0001538s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2572s, Before split: 1.083s, Split: 0.0001531s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1768s, Before split: 1.231s, Split: 0.001971s, After split: 1.216e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04868s, Before split: 1.391s, Split: 0.000186s, After split: 8.821e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2541s, Before split: 1.1s, Split: 0.0001838s, After split: 7.153e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1756s, Before split: 0.8787s, Split: 0.0001729s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05904s, Before split: 1.051s, Split: 0.0001791s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2707s, Before split: 0.7175s, Split: 0.0001531s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1761s, Before split: 0.8189s, Split: 0.000174s, After split: 9.298e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05905s, Before split: 0.8509s, Split: 0.0001585s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.3466s, Before split: 0.6728s, Split: 0.0001881s, After split: 6.676e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1756s, Before split: 1.155s, Split: 0.000181s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05251s, Before split: 1.307s, Split: 0.0001955s, After split: 6.676e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05538s, Before split: 1.33s, Split: 0.0001841s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.07331s, Before split: 0.9992s, Split: 0.0001838s, After split: 4.53e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.06993s, Before split: 0.8098s, Split: 0.0001743s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05228s, Before split: 0.8773s, Split: 0.000155s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05319s, Before split: 0.8883s, Split: 0.0001521s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.0162s, Before split: 0.3722s, Split: 9.823e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01618s, Before split: 0.1617s, Split: 0.0001068s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01661s, Before split: 0.1688s, Split: 0.0001054s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01645s, Before split: 0.1606s, Split: 0.0001042s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01666s, Before split: 0.3498s, Split: 9.251e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01678s, Before split: 0.1651s, Split: 0.0001061s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01874s, Before split: 0.4727s, Split: 9.632e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01556s, Before split: 0.2879s, Split: 0.0001113s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.0152s, Before split: 0.4666s, Split: 8.917e-05s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.06039s, Before split: 1.188s, Split: 0.0001564s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05605s, Before split: 1.223s, Split: 0.0001547s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05814s, Before split: 1.228s, Split: 0.0001559s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01766s, Before split: 0.163s, Split: 0.0001068s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01689s, Before split: 0.163s, Split: 0.0001125s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.0164s, Before split: 0.3556s, Split: 9.513e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.06454s, Before split: 0.883s, Split: 0.0001526s, After split: 4.292e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.06671s, Before split: 0.8028s, Split: 0.0001724s, After split: 4.292e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.06879s, Before split: 0.8135s, Split: 0.0001745s, After split: 4.292e-06s
+Start from epoch 0
+Load: 0.05445s, Before split: 0.8253s, Split: 0.000159s, After split: 4.053e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1432s, Before split: 0.07905s, Split: 9.966e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.145s, Before split: 0.08014s, Split: 0.0001047s, After split: 4.292e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1547s, Before split: 0.1694s, Split: 0.0001104s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3272s, Before split: 0.1711s, Split: 9.06e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1467s, Before split: 0.168s, Split: 9.799e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1567s, Before split: 0.1803s, Split: 0.0001092s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.4248s, Before split: 0.1709s, Split: 0.0001051s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1413s, Before split: 0.1704s, Split: 9.131e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [10127]
+Greedy select GPU, select GPU 0 with mem: 10127
+Load: 0.1761s, Before split: 0.8121s, Split: 0.0001793s, After split: 4.53e-06s
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1995s, Before split: 0.7946s, Split: 0.0001781s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05157s, Before split: 0.8154s, Split: 0.0001533s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2446s, Before split: 0.6556s, Split: 0.0001531s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1981s, Before split: 0.8905s, Split: 0.0001733s, After split: 8.821e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04975s, Before split: 0.9337s, Split: 0.0001588s, After split: 8.106e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2384s, Before split: 0.7286s, Split: 0.0001588s, After split: 7.153e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.268s, Before split: 0.07757s, Split: 9.799e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1447s, Before split: 0.07835s, Split: 9.775e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1467s, Before split: 0.08022s, Split: 0.0001066s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2755s, Before split: 0.07841s, Split: 9.489e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1439s, Before split: 0.07787s, Split: 9.775e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1495s, Before split: 0.08018s, Split: 8.44e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3218s, Before split: 0.1169s, Split: 0.0001013s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3465s, Before split: 0.1162s, Split: 8.702e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3041s, Before split: 0.1194s, Split: 8.75e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1922s, Before split: 0.06252s, Split: 0.0002568s, After split: 5.007e-06s
+Start from epoch 0
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1921s, Before split: 0.06248s, Split: 0.0002675s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.04975s, Before split: 0.05996s, Split: 0.000195s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1992s, Before split: 0.06018s, Split: 0.0001907s, After split: 6.199e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1929s, Before split: 0.0003662s, Split: 0.0003073s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05052s, Before split: 0.0004339s, Split: 0.0002186s, After split: 7.629e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05633s, Before split: 0.0004423s, Split: 0.0002415s, After split: 7.629e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2296s, Before split: 0.0004079s, Split: 0.0003152s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1194s, Before split: 0.0005181s, Split: 0.0002775s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1272s, Before split: 0.0005343s, Split: 0.0002737s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2331s, Before split: 1.836s, Split: 0.0004797s, After split: 8.583e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.09657s, Before split: 1.693s, Split: 0.0002511s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2447s, Before split: 1.684s, Split: 0.0002337s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2014s, Before split: 0.9958s, Split: 0.001052s, After split: 2.742e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05266s, Before split: 0.9582s, Split: 0.0003493s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05642s, Before split: 1.161s, Split: 0.0003331s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2306s, Before split: 1.872s, Split: 0.0004888s, After split: 8.821e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.09759s, Before split: 1.685s, Split: 0.0002515s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2516s, Before split: 1.687s, Split: 0.0002341s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2267s, Before split: 0.0004199s, Split: 0.0003023s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1182s, Before split: 0.0005s, Split: 0.0002656s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1255s, Before split: 0.0004473s, Split: 0.0002458s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.232s, Before split: 0.0004215s, Split: 0.0003245s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1195s, Before split: 0.0005326s, Split: 0.0002809s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1443s, Before split: 0.0004513s, Split: 0.0002735s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3405s, Before split: 0.2282s, Split: 0.005982s, After split: 1.001e-05s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3401s, Before split: 0.2198s, Split: 0.003639s, After split: 6.199e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1843s, Before split: 0.3924s, Split: 0.003498s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2791s, Before split: 0.1715s, Split: 0.003527s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1419s, Before split: 0.1532s, Split: 0.003679s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.298s, Before split: 0.1631s, Split: 0.003579s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1888s, Before split: 1.3s, Split: 0.0001771s, After split: 7.868e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04945s, Before split: 1.286s, Split: 0.0001647s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2505s, Before split: 1.066s, Split: 0.0001554s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1881s, Before split: 1.157s, Split: 0.0001755s, After split: 9.775e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05265s, Before split: 1.168s, Split: 0.0001647s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2553s, Before split: 0.9813s, Split: 0.0001628s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2883s, Before split: 0.1699s, Split: 0.0001037s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1382s, Before split: 0.1675s, Split: 0.0001028s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1479s, Before split: 0.3235s, Split: 8.917e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3301s, Before split: 0.2262s, Split: 0.000104s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3495s, Before split: 0.2318s, Split: 0.0001056s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1886s, Before split: 0.4699s, Split: 0.0001233s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1964s, Before split: 0.8166s, Split: 0.0001793s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05188s, Before split: 0.8608s, Split: 0.0001528s, After split: 6.914e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2437s, Before split: 0.6599s, Split: 0.0001495s, After split: 7.391e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1853s, Before split: 0.8931s, Split: 0.0001745s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04882s, Before split: 0.9316s, Split: 0.00016s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2344s, Before split: 0.8861s, Split: 0.0001538s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2876s, Before split: 0.07767s, Split: 9.227e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1467s, Before split: 0.07817s, Split: 0.0001001s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1486s, Before split: 0.07952s, Split: 9.871e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3293s, Before split: 0.1162s, Split: 0.0001059s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3476s, Before split: 0.1167s, Split: 8.559e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3571s, Before split: 0.1185s, Split: 8.702e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1952s, Before split: 0.0003505s, Split: 0.0002968s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04802s, Before split: 0.0003309s, Split: 0.000191s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05511s, Before split: 0.0004373s, Split: 0.0002365s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2289s, Before split: 0.0004168s, Split: 0.0003042s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.12s, Before split: 0.000514s, Split: 0.0002847s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1269s, Before split: 0.0005021s, Split: 0.0002551s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2504s, Before split: 1.774s, Split: 0.001037s, After split: 2.742e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.1185s, Before split: 1.812s, Split: 0.0003521s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.3523s, Before split: 1.815s, Split: 0.00035s, After split: 6.199e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.2032s, Before split: 1.048s, Split: 0.0009305s, After split: 2.646e-05s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04998s, Before split: 1.053s, Split: 0.0002859s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.202s, Before split: 0.9289s, Split: 0.0002227s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3229s, Before split: 0.2685s, Split: 0.0001152s, After split: 8.106e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.3785s, Before split: 0.2173s, Split: 9.346e-05s, After split: 8.583e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.196s, Before split: 0.4046s, Split: 9.871e-05s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2786s, Before split: 0.1712s, Split: 0.0001037s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1466s, Before split: 0.1603s, Split: 0.000108s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1473s, Before split: 0.3222s, Split: 9.084e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1762s, Before split: 1.238s, Split: 0.0001755s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.04934s, Before split: 1.436s, Split: 0.0001967s, After split: 6.199e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05177s, Before split: 1.29s, Split: 0.0001533s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+Load: 0.1935s, Before split: 1.137s, Split: 0.0001717s, After split: 5.007e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.05244s, Before split: 1.237s, Split: 0.0002191s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+Load: 0.2544s, Before split: 1.051s, Split: 0.0001814s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.02288s, Before split: 0.4219s, Split: 0.0001123s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1756s, Before split: 0.2779s, Split: 9.155e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01516s, Before split: 0.4488s, Split: 9.179e-05s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1354s, Before split: 0.2866s, Split: 0.0001051s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01505s, Before split: 0.2899s, Split: 0.0001252s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1773s, Before split: 0.2773s, Split: 9.227e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1468s, Before split: 0.1629s, Split: 0.0001028s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01508s, Before split: 0.3191s, Split: 9.131e-05s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01551s, Before split: 0.1632s, Split: 0.0001104s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01974s, Before split: 0.2854s, Split: 0.000108s, After split: 1.144e-05s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01472s, Before split: 0.3169s, Split: 0.0001004s, After split: 8.583e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.0152s, Before split: 0.1572s, Split: 0.0001087s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.02607s, Before split: 0.2904s, Split: 0.0001075s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01478s, Before split: 0.158s, Split: 0.0001132s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01537s, Before split: 0.1587s, Split: 0.0001101s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1451s, Before split: 0.1623s, Split: 0.0001111s, After split: 5.722e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01585s, Before split: 0.3188s, Split: 0.0001028s, After split: 5.96e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01533s, Before split: 0.1633s, Split: 0.0001128s, After split: 8.583e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1563s, Before split: 0.2886s, Split: 0.0001013s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01369s, Before split: 0.2834s, Split: 0.0001216s, After split: 4.53e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.2497s, Before split: 0.2696s, Split: 0.0001142s, After split: 5.484e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [2498]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 2498
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01494s, Before split: 0.4122s, Split: 0.0001135s, After split: 6.437e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1721s, Before split: 0.3094s, Split: 0.0001001s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01416s, Before split: 0.4486s, Split: 9.775e-05s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [123]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 123
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1774s, Before split: 0.2913s, Split: 0.0001111s, After split: 6.199e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01365s, Before split: 0.2803s, Split: 0.0001156s, After split: 4.292e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1771s, Before split: 0.282s, Split: 9.012e-05s, After split: 4.053e-06s
+Start from epoch 0
+Task done, results saved in results
+GPU Mem: [123]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 123
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1492s, Before split: 0.3307s, Split: 0.000133s, After split: 5.007e-06s
+GPU Mem: [21]
+GPU Prob: [1.]
+Random select GPU, select GPU 0 with mem: 21
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1354s, Before split: 0.324s, Split: 0.0001035s, After split: 3.815e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.01586s, Before split: 0.2723s, Split: 0.000145s, After split: 5.245e-06s
+Start from epoch 0
+Task done, results saved in results
+node_clustering_coefficient_label dimensions are collapsed due to balanced binning
+Load: 0.1942s, Before split: 0.2716s, Split: 9.084e-05s, After split: 4.768e-06s
+Start from epoch 0
+Task done, results saved in results

@@ -1,14 +1,14 @@
 out_dir: results
 dataset:
   format: Tfg-nx
-  name: ba500
+  name: ws
   task: node
   task_type: classification
   transductive: False
   split: [0.8, 0.2]
   augment_feature: ['node_identity']
   augment_feature_dims: [10]
-  #augment_feature_repr: original
+  augment_feature_repr: original
   augment_label: node_clustering_coefficient
   augment_label_dims: 10
   transform: none
@@ -26,7 +26,7 @@ gnn:
   layers_mp: 3
   layers_post_mp: 1
   dim_inner: 128
-  layer_type: Tfg-idgatfast
+  layer_type: Tfg-idgcnfast
   stage_type: stack
   batchnorm: True
   act: relu
@@ -37,7 +37,7 @@ gnn:
 optim:
   optimizer: adam
   base_lr: 0.01
-  max_epoch: 1000
+  max_epoch: 100
   
   
   
