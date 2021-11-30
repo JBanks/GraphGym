@@ -54,7 +54,6 @@ class GATModel(tf.keras.Model):
                                                ,tf.keras.layers.Dense(256, activation='relu')
                                                ,tf.keras.layers.Dense(datasets[0].num_labels)])
 
-
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index,_ = inputs
         h = self.gat0([x, edge_index], training=training)
@@ -62,6 +61,45 @@ class GATModel(tf.keras.Model):
         h = self.gat2([h, edge_index], training=training)
         h = self.mlp(h)
         return h
+
+
+class SAGEModel(tf.keras.Model):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sage0 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
+        self.sage1 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
+        self.sage2 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
+                                               tf.keras.layers.Dense(256, activation='relu'),
+                                               tf.keras.layers.Dense(datasets[0].num_labels)])
+
+    def call(self, inputs, training=None, mask=None, cache=None):
+        x, edge_index, _ = inputs
+        h = self.sage0([x, edge_index], training=training)
+        h = self.sage1([h, edge_index], training=training)
+        h = self.sage2([h, edge_index], training=training)
+        h = self.mlp(h)
+        return h
+
+
+class GINModel(tf.keras.Model):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.gin0 = tfg.layers.GIN(128, activation=tf.nn.relu)
+        self.gin1 = tfg.layers.GIN(128, activation=tf.nn.relu)
+        self.gin2 = tfg.layers.GIN(128, activation=tf.nn.relu)
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
+                                               tf.keras.layers.Dense(256, activation='relu'),
+                                               tf.keras.layers.Dense(datasets[0].num_labels)])
+
+    def call(self, inputs, training=None, mask=None, cache=None):
+        x, edge_index, _ = inputs
+        h = self.gin0([x, edge_index], training=training)
+        h = self.gin1([h, edge_index], training=training)
+        h = self.gin2([h, edge_index], training=training)
+        h = self.mlp(h)
+        return h
+
 
 class APPNPModel(tf.keras.Model):
 
