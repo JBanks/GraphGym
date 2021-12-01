@@ -2,10 +2,243 @@
 
 from tf_geometric.nn.conv.gcn import  gcn_build_cache_for_graph
 import tensorflow as tf
+import tf_sparse as tfs
 import warnings
 from tf_geometric.utils.graph_utils import add_self_loop_edge
 from tf_geometric.sparse.sparse_adj import SparseAdj
 from tf_geometric.sparse.sparse_ops import sparse_diag_matmul, diag_sparse_matmul
+
+from tf_geometric.nn.kernel.segment import segment_softmax
+
+
+
+class IDGAT(tf.keras.Model):
+
+    def __init__(self, units,
+                 attention_units=None,
+                 activation=None,
+                 use_bias=True,
+                 num_heads=1,
+                 split_value_heads=True,
+                 query_activation=tf.nn.relu,
+                 key_activation=tf.nn.relu,
+                 drop_rate=0.0,
+                 kernel_regularizer=None,
+                 bias_regularizer=None,
+                 *args, **kwargs):
+        """
+        :param units: Positive integer, dimensionality of the output space.
+        :param attention_units: Positive integer, dimensionality of the output space for Q and K in attention.
+        :param activation: Activation function to use.
+        :param use_bias: Boolean, whether the layer uses a bias vector.
+        :param num_heads: Number of attention heads.
+        :param split_value_heads: Boolean. If true, split V as value attention heads, and then concatenate them as output.
+            Else, num_heads replicas of V are used as value attention heads, and the mean of them are used as output.
+        :param query_activation: Activation function for Q in attention.
+        :param key_activation: Activation function for K in attention.
+        :param drop_rate: Dropout rate.
+        :param kernel_regularizer: Regularizer function applied to the `kernel` weights matrix.
+        :param bias_regularizer: Regularizer function applied to the bias vector.
+        """
+        super().__init__(*args, **kwargs)
+        self.units = units
+        self.attention_units = units if attention_units is None else attention_units
+        self.drop_rate = drop_rate
+
+        self.query_kernel = None
+        self.query_bias = None
+        self.query_activation = query_activation
+
+        self.key_kernel = None
+        self.key_bias = None
+        self.key_activation = key_activation
+
+        self.kernel = None
+        self.kernel_id = None
+        self.bias = None
+
+        self.activation = activation
+        self.use_bias = use_bias
+        self.num_heads = num_heads
+        self.split_value_heads = split_value_heads
+
+        self.kernel_regularizer = kernel_regularizer
+        self.bias_regularizer = bias_regularizer
+
+    def build(self, input_shapes):
+        x_shape = input_shapes[0]
+        num_features = x_shape[-1]
+
+        self.query_kernel = self.add_weight("query_kernel", shape=[num_features, self.attention_units],
+                                            initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+        self.query_bias = self.add_weight("query_bias", shape=[self.attention_units],
+                                          initializer="zeros", regularizer=self.bias_regularizer)
+
+        self.key_kernel = self.add_weight("key_kernel", shape=[num_features, self.attention_units],
+                                          initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+        self.key_bias = self.add_weight("key_bias", shape=[self.attention_units],
+                                        initializer="zeros", regularizer=self.bias_regularizer)
+
+        self.kernel = self.add_weight("kernel", shape=[num_features, self.units],
+                                      initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+        self.kernel_id = self.add_weight("kernel", shape=[num_features, self.units],
+                                      initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+        if self.use_bias:
+            self.bias = self.add_weight("bias", shape=[self.units],
+                                        initializer="zeros", regularizer=self.bias_regularizer)
+
+    def call(self, inputs, training=None, mask=None):
+        """
+        :param inputs: List of graph info: [x, edge_index] or [x, edge_index, edge_weight].
+            Note that the edge_weight will not be used.
+        :return: Updated node features (x), shape: [num_nodes, units]
+        """
+       # x, edge_index = inputs[0], inputs[1]
+        if len(inputs) == 4:
+            x, edge_index, id_index, edge_weight = inputs
+        else:
+            x, edge_index, id_index = inputs
+            edge_weight = None
+            
+        return gat_id(x, edge_index,id_index,
+                   self.query_kernel, self.query_bias, self.query_activation,
+                   self.key_kernel, self.key_bias, self.key_activation,
+                   self.kernel, self.kernel_id,self.bias, self.activation,
+                   num_heads=self.num_heads,
+                   split_value_heads=self.split_value_heads,
+                   drop_rate=self.drop_rate,
+                   training=training)
+
+
+
+def gat_id(x, edge_index,id_index,
+        query_kernel, query_bias, query_activation,
+        key_kernel, key_bias, key_activation,
+        kernel, kernel_id,bias=None, activation=None, num_heads=1,
+        split_value_heads=True, drop_rate=0.0, training=False):
+    """
+    :param x: Tensor, shape: [num_nodes, num_features], node features
+    :param edge_index: Tensor, shape: [2, num_edges], edge information
+    :param query_kernel: Tensor, shape: [num_features, num_query_features], weight for Q in attention
+    :param query_bias: Tensor, shape: [num_query_features], bias for Q in attention
+    :param query_activation: Activation function for Q in attention.
+    :param key_kernel: Tensor, shape: [num_features, num_key_features], weight for K in attention
+    :param key_bias: Tensor, shape: [num_key_features], bias for K in attention
+    :param key_activation: Activation function for K in attention.
+    :param kernel: Tensor, shape: [num_features, num_output_features], weight
+    :param bias: Tensor, shape: [num_output_features], bias
+    :param activation: Activation function to use.
+    :param num_heads: Number of attention heads.
+    :param split_value_heads: Boolean. If true, split V as value attention heads, and then concatenate them as output.
+        Else, num_heads replicas of V are used as value attention heads, and the mean of them are used as output.
+    :param drop_rate: Dropout rate.
+    :param training: Python boolean indicating whether the layer should behave in
+        training mode (adding dropout) or in inference mode (doing nothing).
+    :return: Updated node features (x), shape: [num_nodes, num_output_features]
+    """
+
+    num_nodes = tf.shape(x)[0]
+
+    # self-attention
+    edge_index, edge_weight = add_self_loop_edge(edge_index, num_nodes)
+
+    row, col = edge_index[0], edge_index[1]
+
+    x_is_sparse = isinstance(x, tf.sparse.SparseTensor)
+
+    if x_is_sparse:
+        Q = tf.sparse.sparse_dense_matmul(x, query_kernel)
+    else:
+        Q = x @ query_kernel
+    Q += query_bias
+    if query_activation is not None:
+        Q = query_activation(Q)
+    Q = tf.gather(Q, row)
+
+    if x_is_sparse:
+        K = tf.sparse.sparse_dense_matmul(x, key_kernel)
+    else:
+        K = x @ key_kernel
+    K += key_bias
+    if key_activation is not None:
+        K = key_activation(K)
+    K = tf.gather(K, col)
+
+    if x_is_sparse:
+        V = tf.sparse.sparse_dense_matmul(x, kernel)
+    else:
+        
+        x_id = tf.gather(x, id_index,axis=0)
+        h_id = x_id @ kernel_id        
+    
+        h = x @ kernel
+        id_index = tf.reshape(id_index,[-1,1])
+        V = tf.tensor_scatter_nd_add(h,id_index,h_id)
+
+    # xxxxx_ denotes the multi-head style stuff
+    Q_ = tf.concat(tf.split(Q, num_heads, axis=-1), axis=0)
+    K_ = tf.concat(tf.split(K, num_heads, axis=-1), axis=0)
+    # splited queries and keys are modeled as virtual vertices
+    qk_edge_index_ = tf.concat([edge_index + i * num_nodes for i in range(num_heads)], axis=1)
+
+    scale = tf.math.sqrt(tf.cast(tf.shape(Q_)[-1], tf.float32))
+    att_score_ = tf.reduce_sum(Q_ * K_, axis=-1) / scale
+
+    # new implementation based on SparseAdj
+    num_nodes_ = num_nodes * num_heads
+    sparse_att_adj = SparseAdj(qk_edge_index_, att_score_, [num_nodes_, num_nodes_]) \
+        .softmax(axis=-1) \
+        .dropout(drop_rate, training=training)
+    
+
+    if split_value_heads:
+        V_ = tf.concat(tf.split(V, num_heads, axis=-1), axis=0)
+    else:
+        V_ = V
+        edge_index_ = tf.tile(edge_index, [1, num_heads])
+        sparse_att_adj = SparseAdj(edge_index_, sparse_att_adj.edge_weight, [num_nodes, num_nodes])
+#
+    h_ = sparse_att_adj @ V_
+    
+   
+    #normed_att_score_ = segment_softmax(att_score_, qk_edge_index_[0], num_nodes * num_heads)
+    #if training and drop_rate > 0.0:
+    #    normed_att_score_ = tf.compat.v2.nn.dropout(normed_att_score_, drop_rate)
+    #if split_value_heads:
+    #    V_ = tf.concat(tf.split(V, num_heads, axis=-1), axis=0)
+    #    edge_index_ = qk_edge_index_
+    #else:
+    #    V_ = V
+    #    edge_index_ = tf.tile(edge_index, [1, num_heads])
+    #h_ = aggregate_neighbors(
+    #    V_, edge_index_, normed_att_score_,
+    #    gcn_mapper,
+    #    sum_reducer,
+    #    identity_updater
+    #)    
+    
+
+
+
+    if split_value_heads:
+        h = tf.concat(tf.split(h_, num_heads, axis=0), axis=-1)
+    else:
+        h = h_ / num_heads
+
+    if bias is not None:
+        h += bias
+
+    if activation is not None:
+        h = activation(h)
+
+    return h
+
+
+
+
+
+
+
 
 
 
@@ -87,18 +320,18 @@ class IDGCN(tf.keras.Model):
         :return: Updated node features (x), shape: [num_nodes, units]
         """
 
-        if len(inputs) == 3:
-            x, edge_index, edge_weight = inputs
+        if len(inputs) == 4:
+            x, edge_index, id_index, edge_weight = inputs
         else:
-            x, edge_index = inputs
+            x, edge_index, id_index = inputs
             edge_weight = None
 
-        return gcn_id(x, edge_index, edge_weight, self.kernel, self.kernel_id, self.bias,
+        return gcn_id(x, edge_index, id_index, edge_weight, self.kernel, self.kernel_id, self.bias,
                    activation=self.activation, renorm=self.renorm, improved=self.improved, cache=cache)
 
 
 
-def gcn_id(x, edge_index, edge_weight, kernel, bias=None, activation=None,
+def gcn_id(x, edge_index, id_index, edge_weight, kernel, kernel_id, bias=None, activation=None,
         renorm=True, improved=False, cache=None):
     """
     Functional API for Graph Convolutional Networks.
@@ -129,7 +362,13 @@ def gcn_id(x, edge_index, edge_weight, kernel, bias=None, activation=None,
     if isinstance(x, tf.sparse.SparseTensor):
         h = tf.sparse.sparse_dense_matmul(x, kernel)
     else:
+        
+        x_id = tf.gather(x, id_index,axis=0)
+        h_id = x_id @ kernel_id
         h = x @ kernel
+       # h.index_add_(0, id_index, h_id)
+        id_index = tf.reshape(id_index,[-1,1])
+        h = tf.tensor_scatter_nd_add(h,id_index,h_id)
 
     h = normed_sparse_adj @ h
 

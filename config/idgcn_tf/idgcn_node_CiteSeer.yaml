@@ -1,7 +1,7 @@
 out_dir: results
 dataset:
-  format: nx
-  name: ba
+  format: Tfg-PyG
+  name: CiteSeer
   task: node
   task_type: classification
   transductive: True

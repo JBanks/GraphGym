@@ -52,6 +52,8 @@ def compute_loss(pred, true):
 
 def compute_loss_Tfg(logits, mask_index, labels, vars,datasets):
     masked_logits = tf.gather(logits, mask_index)
+    if cfg.dataset.transform == 'ego':
+        labels = tf.gather(labels, mask_index)
     # masked_labels = tf.gather(graph.y, mask_index)
     # labels = tf.gather(graph.y, mask_index)
 

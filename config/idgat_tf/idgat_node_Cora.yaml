@@ -1,16 +1,12 @@
 out_dir: results
 dataset:
-  format: nx
-  name: ba
+  format: Tfg-PyG
+  name: Cora
   task: node
   task_type: classification
   transductive: True
   split: [0.8, 0.2]
-  #augment_feature: ['node_identity']
-  #augment_feature_dims: [10]
-  #augment_feature_repr: original
-  #augment_label: node_clustering_coefficient
-  #augment_label_dims: 10
+
   transform: ego
 train:
   batch_size: 128
@@ -26,7 +22,7 @@ gnn:
   layers_mp: 2
   layers_post_mp: 1
   dim_inner: 128
-  layer_type: Tfg-idgcn
+  layer_type: Tfg-idgat
   #layer_type: gcnidconv
   stage_type: stack
   batchnorm: True
@@ -45,11 +41,3 @@ optim:
   
   
 
-
-#dataset.augment_feature feature [[],['node_identity']]
-#dataset.augment_label label ['node_clustering_coefficient']
-#gnn.layers_pre_mp l_pre [1]
-#gnn.layers_mp l_mp [2]
-#gnn.layers_post_mp l_post [1]
-#gnn.layer_type layer ['gatconv']
-#optim.max_epoch epoch [1000]

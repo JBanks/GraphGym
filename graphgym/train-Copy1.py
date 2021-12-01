@@ -42,13 +42,11 @@ def train_epoch_Tfg(logger, loader, model, optimizer,datasets):
     for batch in loader:
         if cfg.dataset.augment_feature != []:
             node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
-
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         else:
-
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         with tf.GradientTape() as tape:
-            logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=True)
+            logits = model([graph.x, graph.edge_index, graph.edge_weight], training=True)
             #print(logits)
             loss = compute_loss_Tfg(logits, batch.node_label_index, batch.node_label, tape.watched_variables(),datasets)
             vars = tape.watched_variables()
@@ -88,20 +86,17 @@ def eval_epoch_Tfg(loader,model):
     for batch in loader:
         if cfg.dataset.augment_feature != []:
             node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
+            if cfg.dataset.transform == 'e'
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         else:
-            graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())    
-            
-        logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=False)
+            graph = Graph(x=batch.node_feature.numpy(), 
+                                      edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())    
+        logits = model([graph.x, graph.edge_index, graph.edge_weight], training=False)
         masked_logits = tf.gather(logits, batch.node_label_index)
         #masked_labels = tf.gather(graph.y, test_index)
         #print(masked_logits)
         y_pred = tf.argmax(masked_logits, axis=-1, output_type=tf.int32)
-        if cfg.dataset.transform == 'ego':
-            masked_labels = tf.cast(tf.gather(batch.node_label,batch.node_label_index), y_pred.dtype)
-        else:
-            masked_labels = tf.cast(batch.node_label, y_pred.dtype)
-        
+        masked_labels = tf.cast(batch.node_label, y_pred.dtype)
         corrects = tf.equal(y_pred, masked_labels)
         accuracy = tf.reduce_mean(tf.cast(corrects, tf.float32))
         accuracy_sum += accuracy
@@ -124,23 +119,20 @@ def train(loggers, loaders, model, optimizer,datasets):
         logging.info('Start from epoch {}'.format(start_epoch))
 
     num_splits = len(loggers)
-    print(num_splits)
     for cur_epoch in range(start_epoch, cfg.optim.max_epoch):
-        if not cfg.gnn.layer_type[:3] == 'Tfg':
+        if not cfg.dataset.format[:3] == 'Tfg':
             train_epoch(loggers[0], loaders[0], model, optimizer)
         else:
             train_epoch_Tfg(loggers[0], loaders[0], model, optimizer,datasets)
         #loggers[0].write_epoch(cur_epoch)
         if is_eval_epoch(cur_epoch):
-            valid_acc_list_ = []
             for i in range(1, num_splits):
-                if not cfg.gnn.layer_type[:3] == 'Tfg':
+                if not cfg.dataset.format[:3] == 'Tfg':
                     eval_epoch(loggers[i], loaders[i], model)
                 else:
                     valid_acc = eval_epoch_Tfg(loaders[i],model).numpy()
-                    valid_acc_list_.append(valid_acc)
-            valid_acc_list.append(sum(valid_acc_list_)/len(valid_acc_list_))
-            print(f'epoch {cur_epoch}, acc:{sum(valid_acc_list_)/len(valid_acc_list_)}')
+                    valid_acc_list.append(valid_acc)
+                    print(f'epoch {cur_epoch}, acc:{valid_acc}')
                 
                 #loggers[i].write_epoch(cur_epoch)
         #if is_ckpt_epoch(cur_epoch):
