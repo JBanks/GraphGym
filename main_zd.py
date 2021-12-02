@@ -171,8 +171,8 @@ for i in range(repeat):
     else:
         train_dict[cfg.train.mode](
             meters, loaders, model, optimizer, scheduler)
-np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
-np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_label_dims > 0 else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
+np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_label_dims > 0 else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
 print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
 
 
