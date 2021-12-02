@@ -64,6 +64,8 @@ pip install -e .  # From latest verion
 pip install graphgym # (Optional) From pypi stable version
 ```
 
+TF_GEOMETRIC NEEDS SPECIAL SPARSE OPERATIONS. ADD INFORMATION ABOUT HOW TO GET IT.
+
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
 ## Training
