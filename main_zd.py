@@ -141,7 +141,17 @@ for i in range(repeat):
     loaders = create_loader(datasets)
     meters = create_logger(datasets)
     #model = create_model(datasets)
-    model = GCNModel(datasets)
+    model_func = {
+        'gcnidconv': GCNModel,
+        'sageidconv': GCNModel,
+        'gatidconv': GCNModel,
+        'ginidconv': GCNModel,
+        'gcnconv': GCNModel,
+        'gatconv': GATModel,
+        'sageconv': SAGEModel,
+        'ginconv': GINModel,
+    }
+    model = model_func[cfg.gnn.layer_type](datasets)
     #optimizer = create_optimizer(model.parameters())
     optimizer = tf.keras.optimizers.Adam(learning_rate=cfg.optim.base_lr)
     #print(cfg.optim.base_lr)

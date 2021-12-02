@@ -26,7 +26,7 @@ gnn:
   layers_mp: 3
   layers_post_mp: 1
   dim_inner: 128
-  layer_type: Tfg-idgcnfast
+  layer_type: gcnconv
   stage_type: stack
   batchnorm: True
   act: relu
