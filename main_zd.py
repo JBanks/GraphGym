@@ -41,7 +41,8 @@ class GCNModel(tf.keras.Model):
         h = self.gcn2([h, edge_index, edge_weight], cache=cache, training=training, mask=mask)
         h = self.mlp(h)
         return h
-    
+
+
 class IDGCNModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
@@ -80,7 +81,8 @@ class GATModel(tf.keras.Model):
         h = self.gat2([h, edge_index], training=training, mask=mask)
         h = self.mlp(h)
         return h
-    
+
+
 class IDGATModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
@@ -99,8 +101,6 @@ class IDGATModel(tf.keras.Model):
         h = self.gat2([h, edge_index, id_index], training=training)
         h = self.mlp(h)
         return h    
-    
-
 
 
 class SAGEModel(tf.keras.Model):
@@ -206,10 +206,10 @@ for config_name in files:
         meters = create_logger(datasets)
         #model = create_model(datasets)
         model_func = {
-            'Tfg-gcnidconv': GCNModel,
-            'Tfg-sageidconv': GCNModel,
-            'Tfg-gatidconv': GCNModel,
-            'Tfg-ginidconv': GCNModel,
+            'Tfg-idgcnconv': IDGCNModel,
+            'Tfg-idsageconv': GCNModel,
+            'Tfg-idgatconv': IDGATModel,
+            'Tfg-idginconv': GCNModel,
             'Tfg-gcnconv': GCNModel,
             'Tfg-gatconv': GATModel,
             'Tfg-sageconv': SAGEModel,
