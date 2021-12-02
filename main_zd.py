@@ -19,7 +19,7 @@ from graphgym.register import train_dict
 
 import tensorflow as tf
 import tf_geometric as tfg
-from TfgIDLayer import IDGCN,IDGAT
+from TfgIDLayer import IDGCN, IDGAT
 repeat = 3
 
 
@@ -178,13 +178,13 @@ config_path = './config/idgcn_tf'
 #    if f[-4:] != 'yaml':
 #        files.remove(f)
 #print(files)
-files = ['idgcn_node_smallworld.yaml','idgcn_node_scalefree.yaml']
+files = ['idgcn_node_ws.yaml', 'idgcn_node_ba.yaml']
 for config_name in files:
     acc_lists = []
     max_acc = []
     for i in range(repeat):
         # Load config file
-        cfg.merge_from_file('node.yaml')
+        cfg.merge_from_file('./config/idgcn_tf/'+config_name)
         #cfg.device = 'cuda'
         #print(cfg.dataset.format)
         #cfg.merge_from_list(args.opts)
@@ -206,10 +206,10 @@ for config_name in files:
         meters = create_logger(datasets)
         #model = create_model(datasets)
         model_func = {
-            'Tfg-idgcnconv': IDGCNModel,
-            'Tfg-idsageconv': GCNModel,
-            'Tfg-idgatconv': IDGATModel,
-            'Tfg-idginconv': GCNModel,
+            'Tfg-idgcn': IDGCNModel,
+            'Tfg-idsage': GCNModel,
+            'Tfg-idgat': IDGATModel,
+            'Tfg-idgin': GCNModel,
             'Tfg-gcnconv': GCNModel,
             'Tfg-gatconv': GATModel,
             'Tfg-sageconv': SAGEModel,

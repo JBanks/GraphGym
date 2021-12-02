@@ -5,7 +5,7 @@ import tensorflow as tf
 import tf_sparse as tfs
 import warnings
 from tf_geometric.utils.graph_utils import add_self_loop_edge
-from tf_geometric.sparse.sparse_adj import SparseAdj
+from sparse_adj import SparseAdj
 from sparse_ops import sparse_diag_matmul, diag_sparse_matmul
 
 from tf_geometric.nn.kernel.segment import segment_softmax
