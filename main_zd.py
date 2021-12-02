@@ -36,9 +36,9 @@ class GCNModel(tf.keras.Model):
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, edge_weight = inputs
-        h = self.gcn0([x, edge_index, edge_weight], cache=cache)  
-        h = self.gcn1([h, edge_index, edge_weight], cache=cache)
-        h = self.gcn2([h, edge_index, edge_weight], cache=cache)
+        h = self.gcn0([x, edge_index, edge_weight], cache=cache, training=training, mask=mask)
+        h = self.gcn1([h, edge_index, edge_weight], cache=cache, training=training, mask=mask)
+        h = self.gcn2([h, edge_index, edge_weight], cache=cache, training=training, mask=mask)
         h = self.mlp(h)
         return h
     
@@ -56,9 +56,9 @@ class GATModel(tf.keras.Model):
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index,_ = inputs
-        h = self.gat0([x, edge_index], training=training)
-        h = self.gat1([h, edge_index], training=training)
-        h = self.gat2([h, edge_index], training=training)
+        h = self.gat0([x, edge_index], training=training, mask=mask)
+        h = self.gat1([h, edge_index], training=training, mask=mask)
+        h = self.gat2([h, edge_index], training=training, mask=mask)
         h = self.mlp(h)
         return h
 
@@ -75,9 +75,9 @@ class SAGEModel(tf.keras.Model):
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, _ = inputs
-        h = self.sage0([x, edge_index], training=training)
-        h = self.sage1([h, edge_index], training=training)
-        h = self.sage2([h, edge_index], training=training)
+        h = self.sage0([x, edge_index], training=training, cache=cache, mask=mask)
+        h = self.sage1([h, edge_index], training=training, cache=cache, mask=mask)
+        h = self.sage2([h, edge_index], training=training, cache=cache, mask=mask)
         h = self.mlp(h)
         return h
 
@@ -85,18 +85,33 @@ class SAGEModel(tf.keras.Model):
 class GINModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gin0 = tfg.layers.GIN(128, activation=tf.nn.relu)
-        self.gin1 = tfg.layers.GIN(128, activation=tf.nn.relu)
-        self.gin2 = tfg.layers.GIN(128, activation=tf.nn.relu)
+        self.gin0 = tfg.layers.GIN(tf.keras.Sequential([
+                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
+                    tf.keras.layers.Dense(128),
+                    tf.keras.layers.BatchNormalization(),
+                    tf.keras.layers.Activation(tf.nn.relu)
+                ]))
+        self.gin1 = tfg.layers.GIN(tf.keras.Sequential([
+                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
+                    tf.keras.layers.Dense(128),
+                    tf.keras.layers.BatchNormalization(),
+                    tf.keras.layers.Activation(tf.nn.relu)
+                ]))
+        self.gin2 = tfg.layers.GIN(tf.keras.Sequential([
+                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
+                    tf.keras.layers.Dense(128),
+                    tf.keras.layers.BatchNormalization(),
+                    tf.keras.layers.Activation(tf.nn.relu)
+                ]))
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, _ = inputs
-        h = self.gin0([x, edge_index], training=training)
-        h = self.gin1([h, edge_index], training=training)
-        h = self.gin2([h, edge_index], training=training)
+        x, edge_index, edge_weight = inputs
+        h = self.gin0([x, edge_index, edge_weight], training=training, cache=cache, mask=mask)
+        h = self.gin1([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
+        h = self.gin2([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
         h = self.mlp(h)
         return h
 
@@ -142,14 +157,14 @@ for i in range(repeat):
     meters = create_logger(datasets)
     #model = create_model(datasets)
     model_func = {
-        'gcnidconv': GCNModel,
-        'sageidconv': GCNModel,
-        'gatidconv': GCNModel,
-        'ginidconv': GCNModel,
-        'gcnconv': GCNModel,
-        'gatconv': GATModel,
-        'sageconv': SAGEModel,
-        'ginconv': GINModel,
+        'Tfg-gcnidconv': GCNModel,
+        'Tfg-sageidconv': GCNModel,
+        'Tfg-gatidconv': GCNModel,
+        'Tfg-ginidconv': GCNModel,
+        'Tfg-gcnconv': GCNModel,
+        'Tfg-gatconv': GATModel,
+        'Tfg-sageconv': SAGEModel,
+        'Tfg-ginconv': GINModel,
     }
     model = model_func[cfg.gnn.layer_type](datasets)
     #optimizer = create_optimizer(model.parameters())
@@ -171,8 +186,8 @@ for i in range(repeat):
     else:
         train_dict[cfg.train.mode](
             meters, loaders, model, optimizer, scheduler)
-np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_label_dims > 0 else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
-np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_label_dims > 0 else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature_repr != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
+np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature_dims != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
 print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
 
 
