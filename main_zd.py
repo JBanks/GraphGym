@@ -252,7 +252,7 @@ for config_name in files:
             'Tfg-idgcn': IDGCNModel,
             'Tfg-idsage': IDSAGE,
             'Tfg-idgat': IDGATModel,
-            'Tfg-idgin': GCNModel,
+            'Tfg-idgin': IDGINModel,
             'Tfg-gcnconv': GCNModel,
             'Tfg-gatconv': GATModel,
             'Tfg-sageconv': SAGEModel,
