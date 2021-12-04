@@ -213,21 +213,26 @@ class APPNPModel(tf.keras.Model):
         h = self.appnp([x, edge_index, edge_weight], training=training, cache=cache)
         return h
 
-    
-config_path = './config/idgcn_tf'    
+
+model = 'idgin'
+
+config_path = f'./config/{model}_tf'
 #files = os.listdir(config_path)
 #print(files)
 #for f in files:
 #    if f[-4:] != 'yaml':
 #        files.remove(f)
 #print(files)
-files = ['idgcn_node_ws.yaml', 'idgcn_node_ba.yaml']
+datasets = ['ws', 'ba', 'CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS', 'scalefree', 'smallworld']
+tasks = ['node']
+files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]
+
 for config_name in files:
     acc_lists = []
     max_acc = []
     for i in range(repeat):
         # Load config file
-        cfg.merge_from_file('./config/idgcn_tf/'+config_name)
+        cfg.merge_from_file(config_path+config_name+'.yaml')
         #cfg.device = 'cuda'
         #print(cfg.dataset.format)
         #cfg.merge_from_list(args.opts)
