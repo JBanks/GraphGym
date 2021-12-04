@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from tf_geometric.nn.conv.gcn import  gcn_build_cache_for_graph
+from tf_geometric.nn.conv.gcn import gcn_mapper, gcn_norm_edge, gcn_build_cache_for_graph
+from tf_geometric.nn import mean_reducer, max_reducer, sum_reducer
 import tensorflow as tf
 import tf_sparse as tfs
 import warnings
@@ -10,6 +11,158 @@ from sparse_ops import sparse_diag_matmul, diag_sparse_matmul
 
 from tf_geometric.nn.kernel.segment import segment_softmax
 
+
+class IDSAGE(tf.keras.Model):
+    """
+    GraphSAGE: `"Inductive Representation Learning on Large Graphs" <https://arxiv.org/abs/1706.02216>`_ paper
+    """
+
+    def __init__(self, units, activation=tf.nn.relu, use_bias=True, concat=True,
+                 normalize=False,
+                 kernel_regularizer=None, id_regularizer=None, bias_regularizer=None,
+                 *args, **kwargs):
+        """
+        :param units:
+        :param activation:
+        :param use_bias:
+        :param concat:
+        :param normalize:
+        :param kernel_regularizer: Regularizer function applied to the `kernel` weights matrix.
+        :param bias_regularizer: Regularizer function applied to the bias vector.
+        :param args:
+        :param kwargs:
+        """
+        super().__init__(*args, **kwargs)
+        self.units = units
+        self.activation = activation
+        self.use_bias = use_bias
+        self.concat = concat
+        self.normalize = normalize
+
+        if concat and (units % 2 != 0):
+            raise Exception("units must be a event number if concat is True")
+
+        self.kernel_regularizer = kernel_regularizer
+        self.id_regularizer = id_regularizer
+        self.bias_regularizer = bias_regularizer
+
+        self.self_kernel = None
+        self.id_kernel = None
+        self.neighbor_kernel = None
+        self.bias = None
+
+    def build(self, input_shape):
+        x_shape = input_shape[0]
+        num_features = x_shape[-1]
+
+        if self.concat:
+            kernel_units = self.units // 2
+        else:
+            kernel_units = self.units
+
+        self.self_kernel = self.add_weight("self_kernel", shape=[num_features, kernel_units],
+                                           initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+        self.id_kernel = self.add_weight("id_kernel", shape=[num_features, kernel_units], initializer="glorot-uniform",
+                                         regularizer=self.id_regularizer)
+        self.neighbor_kernel = self.add_weight("neighbor_kernel", shape=[num_features, kernel_units],
+                                               initializer="glorot_uniform", regularizer=self.kernel_regularizer)
+
+        if self.use_bias:
+            self.bias = self.add_weight("bias", shape=[self.units], initializer="zeros", regularizer=self.bias_regularizer)
+
+    def call(self, inputs, cache=None, training=None, mask=None):
+        """
+        :param inputs: List of graph info: [x, edge_index, edge_weight]
+        :param cache: A dict for caching A' for GCN. Different graph should not share the same cache dict.
+        :return: Updated node features (x), shape: [num_nodes, units]
+        """
+        if len(inputs) == 4:
+            x, edge_index, id_index, edge_weight = inputs
+        else:
+            x, edge_index, id_index = inputs
+            edge_weight = None
+
+        # Derived from tfg.nn.conv.mean_graph_sage([...])
+        # -----------------------------------------------
+        num_nodes = tf.shape(x)[0]
+        # num_edges = tf.shape(edge_index)[1]
+
+        row, col = edge_index[0], edge_index[1]
+        repeated_x = tf.gather(x, row)
+        neighbor_x = tf.gather(x, col)
+
+        if edge_weight is not None:
+            neighbor_x = gcn_mapper(repeated_x, neighbor_x, edge_weight=edge_weight)
+
+        neighbor_reduced_msg = mean_reducer(neighbor_x, row, num_nodes=num_nodes)
+
+        neighbor_msg = neighbor_reduced_msg @ self.neighbor_kernel
+        h = x @ self.self_kernel
+
+        x_id = tf.gather(x, id_index, axis=0)
+        h_id = x_id @ self.id_kernel
+
+        id_index = tf.reshape(id_index, [-1, 1])
+        h = tf.tensor_scatter_nd_add(h, id_index, h_id)
+
+        if self.concat:
+            h = tf.concat([h, neighbor_msg], axis=1)
+        else:
+            h = h + neighbor_msg
+
+        if self.bias is not None:
+            h += self.bias
+        if self.activation is not None:
+            h = self.activation(h)
+        if self.normalize:
+            h = tf.nn.l2_normalize(h, axis=-1)
+        return h
+
+
+class IDGIN(tf.keras.Model):
+    """
+    Graph Isomorphism Network  Layer
+    """
+
+    def __init__(self, mlp_model, mlpid_model, eps=0, train_eps=False, *args, **kwargs):
+        """
+        :param mlp_model: A neural network (multi-layer perceptrons).
+        :param eps: float, optional, (default: :obj:`0.`).
+        :param train_eps: Boolean, Whether the eps is trained.
+        :param activation: Activation function to use.
+        """
+        super().__init__(*args, **kwargs)
+        self.mlp_model = mlp_model
+        self.mlp_id = mlpid_model
+
+        self.eps = eps
+        if train_eps:
+            self.eps = self.add_weight("eps", shape=[], initializer="zeros")
+
+    def call(self, inputs, cache=None, training=None, mask=None):
+        """
+        :param inputs: List of graph info: [x, edge_index, edge_weight]
+        :param cache: A dict for caching A' for GIN. Different graph should not share the same cache dict.
+        :return: Updated node features (x), shape: [num_nodes, units]
+        """
+
+        if len(inputs) == 4:
+            x, edge_index, id_index, _ = inputs
+        else:
+            x, edge_index, id_index = inputs
+
+        # TODO: maybe remove_self_loops to get edge_index ref line 370 of 'idconv.py'
+        num_nodes = tf.shape(x)[0]
+        sparse_adj = SparseAdj(edge_index, shape=[num_nodes, num_nodes])
+        neighbor_h = sparse_adj @ x
+        h = x * (1.0 + self.eps) + neighbor_h
+
+        h_id = tf.gather(h, id_index, axis=0)
+        h_id = self.mlp_id(h_id, training=training)
+        h = self.mlp_model(h, training=training)
+        id_index = tf.reshape(id_index, [-1, 1])
+        h = tf.tensor_scatter_nd_add(h, id_index, h_id)
+        return h
 
 
 class IDGAT(tf.keras.Model):
@@ -110,7 +263,6 @@ class IDGAT(tf.keras.Model):
                    training=training)
 
 
-
 def gat_id(x, edge_index,id_index,
         query_kernel, query_bias, query_activation,
         key_kernel, key_bias, key_activation,
@@ -167,13 +319,12 @@ def gat_id(x, edge_index,id_index,
     if x_is_sparse:
         V = tf.sparse.sparse_dense_matmul(x, kernel)
     else:
-        
-        x_id = tf.gather(x, id_index,axis=0)
+        x_id = tf.gather(x, id_index, axis=0)
         h_id = x_id @ kernel_id        
     
         h = x @ kernel
-        id_index = tf.reshape(id_index,[-1,1])
-        V = tf.tensor_scatter_nd_add(h,id_index,h_id)
+        id_index = tf.reshape(id_index, [-1, 1])
+        V = tf.tensor_scatter_nd_add(h, id_index, h_id)
 
     # xxxxx_ denotes the multi-head style stuff
     Q_ = tf.concat(tf.split(Q, num_heads, axis=-1), axis=0)
@@ -232,16 +383,6 @@ def gat_id(x, edge_index,id_index,
         h = activation(h)
 
     return h
-
-
-
-
-
-
-
-
-
-
 
 
 class IDGCN(tf.keras.Model):
@@ -330,7 +471,6 @@ class IDGCN(tf.keras.Model):
                    activation=self.activation, renorm=self.renorm, improved=self.improved, cache=cache)
 
 
-
 def gcn_id(x, edge_index, id_index, edge_weight, kernel, kernel_id, bias=None, activation=None,
         renorm=True, improved=False, cache=None):
     """
@@ -363,12 +503,12 @@ def gcn_id(x, edge_index, id_index, edge_weight, kernel, kernel_id, bias=None, a
         h = tf.sparse.sparse_dense_matmul(x, kernel)
     else:
         
-        x_id = tf.gather(x, id_index,axis=0)
+        x_id = tf.gather(x, id_index, axis=0)
         h_id = x_id @ kernel_id
         h = x @ kernel
-       # h.index_add_(0, id_index, h_id)
-        id_index = tf.reshape(id_index,[-1,1])
-        h = tf.tensor_scatter_nd_add(h,id_index,h_id)
+        # h.index_add_(0, id_index, h_id)
+        id_index = tf.reshape(id_index, [-1, 1])
+        h = tf.tensor_scatter_nd_add(h, id_index, h_id)
 
     h = normed_sparse_adj @ h
 
@@ -379,6 +519,7 @@ def gcn_id(x, edge_index, id_index, edge_weight, kernel, kernel_id, bias=None, a
         h = activation(h)
 
     return h
+
 
 def gcn_norm_adj(sparse_adj, renorm=True, improved=False, cache: dict = None):
     """
@@ -419,6 +560,3 @@ def gcn_norm_adj(sparse_adj, renorm=True, improved=False, cache: dict = None):
         cache[cache_key] = normed_sparse_adj
 
     return normed_sparse_adj
-
-
-

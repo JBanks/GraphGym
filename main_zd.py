@@ -19,7 +19,7 @@ from graphgym.register import train_dict
 
 import tensorflow as tf
 import tf_geometric as tfg
-from TfgIDLayer import IDGCN, IDGAT
+from TfgIDLayer import IDGCN, IDGAT, IDSAGE, IDGIN
 repeat = 3
 
 
@@ -31,8 +31,8 @@ class GCNModel(tf.keras.Model):
         self.gcn1 = tfg.layers.GCN(128, activation=tf.nn.relu)
         self.gcn2 = tfg.layers.GCN(128, activation=tf.nn.relu)
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
-                                               ,tf.keras.layers.Dense(256, activation='relu')
-                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
+                                               , tf.keras.layers.Dense(256, activation='relu')
+                                               , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, edge_weight = inputs
@@ -51,11 +51,11 @@ class IDGCNModel(tf.keras.Model):
         self.gcn1 = IDGCN(128, activation=tf.nn.relu)
         self.gcn2 = IDGCN(128, activation=tf.nn.relu)
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
-                                               ,tf.keras.layers.Dense(256, activation='relu')
-                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
+                                               , tf.keras.layers.Dense(256, activation='relu')
+                                               , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index,edge_weight = inputs
+        x, edge_index, id_index, edge_weight = inputs
         h = self.gcn0([x, edge_index, id_index, edge_weight], cache=cache)  
         h = self.gcn1([h, edge_index, id_index, edge_weight], cache=cache)
         h = self.gcn2([h, edge_index, id_index, edge_weight], cache=cache)
@@ -71,11 +71,11 @@ class GATModel(tf.keras.Model):
         self.gat1 = tfg.layers.GAT(128, activation=tf.nn.relu)
         self.gat2 = tfg.layers.GAT(128, activation=tf.nn.relu)
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
-                                               ,tf.keras.layers.Dense(256, activation='relu')
-                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
+                                               , tf.keras.layers.Dense(256, activation='relu')
+                                               , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index,_ = inputs
+        x, edge_index, _ = inputs
         h = self.gat0([x, edge_index], training=training, mask=mask)
         h = self.gat1([h, edge_index], training=training, mask=mask)
         h = self.gat2([h, edge_index], training=training, mask=mask)
@@ -91,11 +91,11 @@ class IDGATModel(tf.keras.Model):
         self.gat1 = IDGAT(128, activation=tf.nn.relu)
         self.gat2 = IDGAT(128, activation=tf.nn.relu)
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
-                                               ,tf.keras.layers.Dense(256, activation='relu')
-                                               ,tf.keras.layers.Dense(datasets[0].num_labels)])
+                                               , tf.keras.layers.Dense(256, activation='relu')
+                                               , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index,edge_weight = inputs
+        x, edge_index, id_index, edge_weight = inputs
         h = self.gat0([x, edge_index, id_index], training=training)  
         h = self.gat1([h, edge_index, id_index], training=training)
         h = self.gat2([h, edge_index, id_index], training=training)
@@ -104,54 +104,97 @@ class IDGATModel(tf.keras.Model):
 
 
 class SAGEModel(tf.keras.Model):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, layers=3, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sage0 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
-        self.sage1 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
-        self.sage2 = tfg.layers.GCNGraphSage(128, activation=tf.nn.relu)
+        self.sage_layers = []
+        for _ in range(layers):
+            self.sage_layers.append(tfg.layers.MeanGraphSage(128, activation=tf.nn.relu))
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, _ = inputs
-        h = self.sage0([x, edge_index], training=training, cache=cache, mask=mask)
-        h = self.sage1([h, edge_index], training=training, cache=cache, mask=mask)
-        h = self.sage2([h, edge_index], training=training, cache=cache, mask=mask)
+        h = x
+        for layer in self.sage_layers:
+            h = layer([h, edge_index], training=training, cache=cache, mask=mask)
+        h = self.mlp(h)
+        return h
+
+
+class IDSAGEModel(tf.keras.Model):
+    def __init__(self, layers=3, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sage_layers = []
+        for _ in range(layers):
+            self.sage_layers.append(IDSAGE(128, activation=tf.nn.relu))
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
+                                               tf.keras.layers.Dense(256, activation='relu'),
+                                               tf.keras.layers.Dense(datasets[0].num_labels)])
+
+    def call(self, inputs, training=None, mask=None, cache=None):
+        x, edge_index, id_index, _ = inputs
+        h = x
+        for layer in self.sage_layers:
+            h = layer([h, edge_index, id_index], training=training, cache=cache, mask=mask)
         h = self.mlp(h)
         return h
 
 
 class GINModel(tf.keras.Model):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, layers=3, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gin0 = tfg.layers.GIN(tf.keras.Sequential([
+        self.gin_layers = []
+        for _ in range(layers):
+            self.gin_layers.append(tfg.layers.GIN(tf.keras.Sequential([
                     tf.keras.layers.Dense(128, activation=tf.nn.relu),
                     tf.keras.layers.Dense(128),
                     tf.keras.layers.BatchNormalization(),
                     tf.keras.layers.Activation(tf.nn.relu)
-                ]))
-        self.gin1 = tfg.layers.GIN(tf.keras.Sequential([
-                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-                    tf.keras.layers.Dense(128),
-                    tf.keras.layers.BatchNormalization(),
-                    tf.keras.layers.Activation(tf.nn.relu)
-                ]))
-        self.gin2 = tfg.layers.GIN(tf.keras.Sequential([
-                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-                    tf.keras.layers.Dense(128),
-                    tf.keras.layers.BatchNormalization(),
-                    tf.keras.layers.Activation(tf.nn.relu)
-                ]))
+                ])))
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
         x, edge_index, edge_weight = inputs
-        h = self.gin0([x, edge_index, edge_weight], training=training, cache=cache, mask=mask)
-        h = self.gin1([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
-        h = self.gin2([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
+        h = x
+        for layer in self.gin_layers:
+            h = layer([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
+        h = self.mlp(h)
+        return h
+
+
+class IDGINModel(tf.keras.Model):
+    def __init__(self, layers=3, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.gin_layers = []
+        for _ in range(layers):
+            self.gin_layers.append(
+                IDGIN(  # Generate IDGIN layers using separate MLPs for the core, and the id portions of the network
+                    tf.keras.Sequential([
+                        tf.keras.layers.Dense(128, activation=tf.nn.relu),
+                        tf.keras.layers.Dense(128),
+                        tf.keras.layers.BatchNormalization(),
+                        tf.keras.layers.Activation(tf.nn.relu)
+                    ]),
+                    tf.keras.Sequential([
+                        tf.keras.layers.Dense(128, activation=tf.nn.relu),
+                        tf.keras.layers.Dense(128),
+                        tf.keras.layers.BatchNormalization(),
+                        tf.keras.layers.Activation(tf.nn.relu)
+                    ])
+                )
+            )
+        self.mlp = tf.keras.models.Sequential([tf.keras.Flatten(),  # Run everything through a final inference layer
+                                               tf.keras.layers.Dense(256, activation='relu'),
+                                               tf.keras.layers.Dense(datasets[0].num_labels)])  # Classify based on labels
+
+    def call(self, inputs, training=None, mask=None, cache=None):
+        x, edge_index, id_index, edge_weight = inputs
+        h = x
+        for layer in self.gin_layers:  # Iterate through each of the GIN layers
+            h = layer([h, edge_index, id_index, edge_weight], training=training, mask=mask, cache=cache)
         h = self.mlp(h)
         return h
 
@@ -207,7 +250,7 @@ for config_name in files:
         #model = create_model(datasets)
         model_func = {
             'Tfg-idgcn': IDGCNModel,
-            'Tfg-idsage': GCNModel,
+            'Tfg-idsage': IDSAGE,
             'Tfg-idgat': IDGATModel,
             'Tfg-idgin': GCNModel,
             'Tfg-gcnconv': GCNModel,
