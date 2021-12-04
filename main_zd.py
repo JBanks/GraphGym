@@ -104,10 +104,10 @@ class IDGATModel(tf.keras.Model):
 
 
 class SAGEModel(tf.keras.Model):
-    def __init__(self, layers=3, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sage_layers = []
-        for _ in range(layers):
+        for _ in range(3):
             self.sage_layers.append(tfg.layers.MeanGraphSage(128, activation=tf.nn.relu))
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
@@ -123,10 +123,10 @@ class SAGEModel(tf.keras.Model):
 
 
 class IDSAGEModel(tf.keras.Model):
-    def __init__(self, layers=3, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sage_layers = []
-        for _ in range(layers):
+        for _ in range(3):
             self.sage_layers.append(IDSAGE(128, activation=tf.nn.relu))
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
@@ -142,10 +142,10 @@ class IDSAGEModel(tf.keras.Model):
 
 
 class GINModel(tf.keras.Model):
-    def __init__(self, layers=3, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.gin_layers = []
-        for _ in range(layers):
+        for _ in range(3):
             self.gin_layers.append(tfg.layers.GIN(tf.keras.Sequential([
                     tf.keras.layers.Dense(128, activation=tf.nn.relu),
                     tf.keras.layers.Dense(128),
@@ -166,10 +166,10 @@ class GINModel(tf.keras.Model):
 
 
 class IDGINModel(tf.keras.Model):
-    def __init__(self, layers=3, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.gin_layers = []
-        for _ in range(layers):
+        for _ in range(3):
             self.gin_layers.append(
                 IDGIN(  # Generate IDGIN layers using separate MLPs for the core, and the id portions of the network
                     tf.keras.Sequential([
@@ -186,7 +186,7 @@ class IDGINModel(tf.keras.Model):
                     ])
                 )
             )
-        self.mlp = tf.keras.models.Sequential([tf.keras.Flatten(),  # Run everything through a final inference layer
+        self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),  # Run everything through a final inference layer
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])  # Classify based on labels
 
@@ -232,7 +232,7 @@ for config_name in files:
     max_acc = []
     for i in range(repeat):
         # Load config file
-        cfg.merge_from_file(config_path+config_name+'.yaml')
+        cfg.merge_from_file(config_path+'/'+config_name+'.yaml')
         #cfg.device = 'cuda'
         #print(cfg.dataset.format)
         #cfg.merge_from_list(args.opts)
