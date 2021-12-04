@@ -223,7 +223,7 @@ config_path = f'./config/{model}_tf'
 #    if f[-4:] != 'yaml':
 #        files.remove(f)
 #print(files)
-datasets = ['ws', 'ba', 'CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS', 'scalefree', 'smallworld']
+datasets = ['ws', 'ba', 'CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS']
 tasks = ['node']
 files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]
 
