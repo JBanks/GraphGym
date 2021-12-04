@@ -62,7 +62,7 @@ class IDSAGE(tf.keras.Model):
 
         self.self_kernel = self.add_weight("self_kernel", shape=[num_features, kernel_units],
                                            initializer="glorot_uniform", regularizer=self.kernel_regularizer)
-        self.id_kernel = self.add_weight("id_kernel", shape=[num_features, kernel_units], initializer="glorot-uniform",
+        self.id_kernel = self.add_weight("id_kernel", shape=[num_features, kernel_units], initializer="glorot_uniform",
                                          regularizer=self.id_regularizer)
         self.neighbor_kernel = self.add_weight("neighbor_kernel", shape=[num_features, kernel_units],
                                                initializer="glorot_uniform", regularizer=self.kernel_regularizer)

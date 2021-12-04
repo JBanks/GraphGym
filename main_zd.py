@@ -255,7 +255,7 @@ for config_name in files:
         #model = create_model(datasets)
         model_func = {
             'Tfg-idgcn': IDGCNModel,
-            'Tfg-idsage': IDSAGE,
+            'Tfg-idsage': IDSAGEModel,
             'Tfg-idgat': IDGATModel,
             'Tfg-idgin': IDGINModel,
             'Tfg-gcnconv': GCNModel,
