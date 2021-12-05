@@ -3,6 +3,7 @@ import random
 import numpy as np
 import torch
 import logging
+import argparse
 
 #from GraphGym.graphgym.cmd_args import parse_args
 from graphgym.config import (cfg, assert_cfg, dump_cfg,
@@ -20,6 +21,7 @@ from graphgym.register import train_dict
 import tensorflow as tf
 import tf_geometric as tfg
 from TfgIDLayer import IDGCN, IDGAT, IDSAGE, IDGIN
+
 repeat = 3
 
 
@@ -214,7 +216,12 @@ class APPNPModel(tf.keras.Model):
         return h
 
 
-model = 'idsage'
+parser = argparse.ArgumentParser()
+parser.add_argument('model', default='idsage')
+
+args = parser.parse_args()
+
+model = args.model
 
 config_path = f'./config/{model}_tf'
 #files = os.listdir(config_path)
@@ -223,7 +230,7 @@ config_path = f'./config/{model}_tf'
 #    if f[-4:] != 'yaml':
 #        files.remove(f)
 #print(files)
-datasets = ['ws', 'ba', 'CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS']
+datasets = ['CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS', 'ws', 'ba']
 tasks = ['node']
 files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]
 
@@ -279,7 +286,8 @@ for config_name in files:
         else:
             train_dict[cfg.train.mode](
                 meters, loaders, model, optimizer, scheduler)
-    np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
-    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+    layer_type = f'id{cfg.gnn.layer_type}Fast' if cfg.dataset.augment_feature != [] else cfg.gnn.layer_type
+    np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}-{layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
+    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}-{layer_typee}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
     print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
 
