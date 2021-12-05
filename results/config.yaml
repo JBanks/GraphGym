@@ -3,7 +3,8 @@ bn:
   mom: 0.1
 cfg_dest: config.yaml
 dataset:
-  augment_feature: []
+  augment_feature:
+  - node_identity
   augment_feature_dims:
   - 10
   augment_feature_repr: original
@@ -20,8 +21,8 @@ dataset:
   edge_negative_sampling_ratio: 1.0
   edge_train_mode: all
   encoder_dim: 128
-  format: PyG
-  name: TU_PROTEINS
+  format: nx
+  name: ba
   node_encoder: false
   node_encoder_bn: true
   node_encoder_name: Atom
@@ -36,7 +37,7 @@ dataset:
   task_type: classification
   to_undirected: false
   transductive: false
-  transform: ego
+  transform: none
   tu_simple: true
 device: cuda:0
 example_arg: example
@@ -54,7 +55,7 @@ gnn:
   flow: source_to_target
   keep_edge: 0.5
   l2norm: true
-  layer_type: Tfg-idsage
+  layer_type: Tfg-sageconv
   layers_mp: 3
   layers_post_mp: 1
   layers_pre_mp: 1
@@ -103,7 +104,7 @@ tensorboard_agg: true
 tensorboard_each_run: false
 train:
   auto_resume: false
-  batch_size: 128
+  batch_size: 48
   ckpt_clean: true
   ckpt_period: 1000
   epoch_resume: -1
