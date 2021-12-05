@@ -45,11 +45,13 @@ def train_epoch_Tfg(logger, loader, model, optimizer,datasets):
 
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         else:
-
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         with tf.GradientTape() as tape:
-            logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=True)
+            if 'id' in cfg.gnn.layer_type:
+                logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=True)
             #print(logits)
+            else:
+                logits = model([graph.x, graph.edge_index, graph.edge_weight], training=True)
             loss = compute_loss_Tfg(logits, batch.node_label_index, batch.node_label, tape.watched_variables(),datasets)
             vars = tape.watched_variables()
             grads = tape.gradient(loss, vars)
@@ -91,8 +93,10 @@ def eval_epoch_Tfg(loader,model):
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         else:
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())    
-            
-        logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=False)
+        if 'id' in cfg.gnn.layer_type:    
+            logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=False)
+        else:
+            logits = model([graph.x, graph.edge_index, graph.edge_weight], training=False)
         masked_logits = tf.gather(logits, batch.node_label_index)
         #masked_labels = tf.gather(graph.y, test_index)
         #print(masked_logits)
