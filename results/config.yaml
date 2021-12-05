@@ -20,8 +20,8 @@ dataset:
   edge_negative_sampling_ratio: 1.0
   edge_train_mode: all
   encoder_dim: 128
-  format: nx
-  name: smallworld
+  format: PyG
+  name: TU_PROTEINS
   node_encoder: false
   node_encoder_bn: true
   node_encoder_name: Atom
@@ -38,7 +38,7 @@ dataset:
   transductive: false
   transform: ego
   tu_simple: true
-device: auto
+device: cuda:0
 example_arg: example
 example_group:
   example_arg: example
@@ -54,7 +54,7 @@ gnn:
   flow: source_to_target
   keep_edge: 0.5
   l2norm: true
-  layer_type: Tfg-idgcn
+  layer_type: Tfg-idsage
   layers_mp: 3
   layers_post_mp: 1
   layers_pre_mp: 1
@@ -81,7 +81,7 @@ num_workers: 0
 optim:
   base_lr: 0.01
   lr_decay: 0.1
-  max_epoch: 500
+  max_epoch: 1000
   momentum: 0.9
   optimizer: adam
   scheduler: cos
@@ -91,9 +91,10 @@ optim:
   - 90
   weight_decay: 0.0005
 out_dir: results
+params: 0
 print: both
 round: 4
-seed: 1
+seed: 3
 share:
   dim_in: 1
   dim_out: 1
@@ -102,7 +103,7 @@ tensorboard_agg: true
 tensorboard_each_run: false
 train:
   auto_resume: false
-  batch_size: 16
+  batch_size: 128
   ckpt_clean: true
   ckpt_period: 1000
   epoch_resume: -1

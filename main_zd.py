@@ -214,7 +214,7 @@ class APPNPModel(tf.keras.Model):
         return h
 
 
-model = 'idgin'
+model = 'idsage'
 
 config_path = f'./config/{model}_tf'
 #files = os.listdir(config_path)
@@ -279,7 +279,7 @@ for config_name in files:
         else:
             train_dict[cfg.train.mode](
                 meters, loaders, model, optimizer, scheduler)
-    np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature_repr != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
-    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature_dims != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+    np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
+    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}{"Fast" if cfg.dataset.augment_feature != [] else ""}-{cfg.gnn.layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
     print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
 
