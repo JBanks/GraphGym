@@ -217,7 +217,7 @@ class APPNPModel(tf.keras.Model):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('model', default='idsage')
+parser.add_argument('--model', type=str, default='idsage')
 
 args = parser.parse_args()
 
