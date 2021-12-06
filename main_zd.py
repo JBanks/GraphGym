@@ -259,14 +259,14 @@ class APPNPModel(tf.keras.Model):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default='ginconv')
-
 args = parser.parse_args()
-
 model = args.model
 
 config_path = f'./config/{model}_tf'
 
+# These are all of the datasets that we would like to evaluate against
 datasets = ['CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS', 'ws', 'ba']
+# These are the tasks that we will be evaluating.
 tasks = ['node']
 files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]  # generate a list of files to process
 
