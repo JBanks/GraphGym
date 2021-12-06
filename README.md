@@ -97,7 +97,7 @@ The evaluations of datasets are automatically placed in the results folder after
 
 ## Results
 
-Our model achieves the following performance on the Node classification task using the :
+Our model achieves the following performance on the Node classification task using the datasets from the original paper:
 
 <div id="tab:node_class">
 
