@@ -1,4 +1,4 @@
-# My Paper Title
+# Identity-Aware Graph Neural Networks
 
 This is a reproduction of [Identity-Aware Graph Neural Networks](https://ojs.aaai.org/index.php/AAAI/article/view/17283) by Zhihao Dong and Jeremy Banks.
 
