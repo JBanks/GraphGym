@@ -37,12 +37,12 @@ def train_epoch_Tfg(logger, loader, model, optimizer, datasets):
     loss_s = 0
     time_start = time.time()
     for batch in loader:  # Take portions of the dataset to perform training
-        if cfg.dataset.augment_feature != []:  # If our YAML does not define an augmented feature
+        if cfg.dataset.augment_feature != []:  # If our YAML defines an augmented feature
             # Generate our node features by concatenating
-            # TODO: Zhihao, can you give more detail here?
+            # Build the graph for training using node_feature, edge_index and node_label
             node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]], batch['node_feature']), 1)
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
-        else:  # If our YAML does have augmented features defined:
+        else:  # If our YAML does not have augmented features defined:
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         with tf.GradientTape() as tape:
             if 'id' in cfg.gnn.layer_type:  # if we're using the full ID-GNN model, include node_id_index as an input.
@@ -96,7 +96,7 @@ def eval_epoch_Tfg(loader, model):
         masked_logits = tf.gather(logits, batch.node_label_index)  # Infer values for the predicted classes
         y_pred = tf.argmax(masked_logits, axis=-1, output_type=tf.int32)  # Take the highest value as the likely class
         if cfg.dataset.transform == 'ego':
-            # TODO: Zhihao, please comment this section.
+            # For Full ID-GNN evaluation, gathering the required test node labels indexed by node_label_index from all the node labels
             masked_labels = tf.cast(tf.gather(batch.node_label, batch.node_label_index), y_pred.dtype)
         else:
             masked_labels = tf.cast(batch.node_label, y_pred.dtype)
