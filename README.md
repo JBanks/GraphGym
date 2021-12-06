@@ -118,7 +118,6 @@ Our model achieves the following performance on the Node classification task usi
 | **Best ID-GNN over best GNN** |      |      29.2%       |      50.5%       |      40.7%       |      46.1%       |
 
 Results of node classification: predicting clustering coefficient
-(Results from our reproduction)
 
 </div>
 
@@ -140,8 +139,7 @@ Results of node classification: predicting clustering coefficient
 |                               | GIN  | **1.000** ± 0.00 | **0.948** ± 0.07 |
 | **Best ID-GNN over best GNN** |      |      12.1%       |      17.8%       |
 
-Results of node classification: real-world labels (Results from our
-reproduction)
+Results of node classification: real-world labels
 
 </div>
 
