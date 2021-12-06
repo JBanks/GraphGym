@@ -143,6 +143,8 @@ Results of node classification: real-world labels
 
 </div>
 
+We fully acknowledge that the results on the real-world datasets with greater than 90% accuracy are likely erroneous, and we ask you to bear with us while we investigate this issue.
+
 ## Contributing
 
 We did not find a licence section on the page of the original authors, but they designed the GraphGym framework for the express purpose of allowing contributions.  I freely welcome you forking and continuing any of our work, however I am not willing to accept pull requests.  If you fork and continue this work, please let me know and I will place a link to your fork in this readme.  The original authors strongly encourage people submitting pull requests to contribute to their project.  I encourage you to contribute any PyTorch modules to the original GitHub repo available here: https://github.com/snap-stanford/GraphGym
