@@ -3,17 +3,13 @@ import time
 import logging
 
 from graphgym.config import cfg
-from graphgym.loss import compute_loss,compute_loss_Tfg
+from graphgym.loss import compute_loss, compute_loss_Tfg
 from graphgym.utils.epoch import is_eval_epoch, is_ckpt_epoch
 from graphgym.checkpoint import load_ckpt, save_ckpt, clean_ckpt
 
 
-
 from tf_geometric.data.graph import Graph
 import tensorflow as tf
-
-
-
 
 
 def train_epoch(logger, loader, model, optimizer):
@@ -35,35 +31,36 @@ def train_epoch(logger, loader, model, optimizer):
                             params=cfg.params)
         time_start = time.time()
    # scheduler.step()
-    
-def train_epoch_Tfg(logger, loader, model, optimizer,datasets):
+
+
+def train_epoch_Tfg(logger, loader, model, optimizer, datasets):
     loss_s = 0
     time_start = time.time()
-    for batch in loader:
-        if cfg.dataset.augment_feature != []:
-            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
-
+    for batch in loader:  # Take portions of the dataset to perform training
+        if cfg.dataset.augment_feature != []:  # If our YAML does not define an augmented feature
+            # Generate our node features by concatenating
+            # TODO: Zhihao, can you give more detail here?
+            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]], batch['node_feature']), 1)
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
-        else:
+        else:  # If our YAML does have augmented features defined:
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         with tf.GradientTape() as tape:
-            if 'id' in cfg.gnn.layer_type:
-                logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=True)
-            #print(logits)
+            if 'id' in cfg.gnn.layer_type:  # if we're using the full ID-GNN model, include node_id_index as an input.
+                logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(), graph.edge_weight], training=True)
             else:
                 logits = model([graph.x, graph.edge_index, graph.edge_weight], training=True)
-            loss = compute_loss_Tfg(logits, batch.node_label_index, batch.node_label, tape.watched_variables(),datasets)
-            vars = tape.watched_variables()
-            grads = tape.gradient(loss, vars)
-            optimizer.apply_gradients(zip(grads, vars))
-        logger.update_stats(true=torch.tensor([1]*128),
+            # Compute the loss of the classifier
+            loss = compute_loss_Tfg(logits, batch.node_label_index, batch.node_label, tape.watched_variables(), datasets)
+            vars = tape.watched_variables()  # Retrieve a list of the trainable parameters
+            grads = tape.gradient(loss, vars)  # Retrieve the gradients for each of the trainable parameters
+            optimizer.apply_gradients(zip(grads, vars))  # Apply the gradients
+        logger.update_stats(true=torch.tensor([1]*128),  # Save progress in a logger instance.
                             pred=torch.tensor([1]*128),
                             loss=loss,
                             lr=cfg.optim.base_lr,
                             time_used=time.time() - time_start,
                             params=cfg.params)
         time_start = time.time()
-   # scheduler.step()
 
 
 @torch.no_grad()
@@ -80,44 +77,43 @@ def eval_epoch(logger, loader, model):
                             lr=0,
                             time_used=time.time() - time_start,
                             params=cfg.params)
-       
         time_start = time.time()
         
-        
 
-def eval_epoch_Tfg(loader,model):
+def eval_epoch_Tfg(loader, model):
     accuracy_sum = 0
-    for batch in loader:
+    for batch in loader:  # Take a portion of the dataset for evaluation
         if cfg.dataset.augment_feature != []:
-            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]],batch['node_feature']),1)
+            node_feature = torch.cat((batch[cfg.dataset.augment_feature[0]], batch['node_feature']), 1)
             graph = Graph(x=node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())
         else:
             graph = Graph(x=batch.node_feature.numpy(), edge_index=batch.edge_index.numpy(), y=batch.node_label.numpy())    
         if 'id' in cfg.gnn.layer_type:    
-            logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(),graph.edge_weight], training=False)
+            logits = model([graph.x, graph.edge_index, batch.node_id_index.numpy(), graph.edge_weight], training=False)
         else:
             logits = model([graph.x, graph.edge_index, graph.edge_weight], training=False)
-        masked_logits = tf.gather(logits, batch.node_label_index)
-        #masked_labels = tf.gather(graph.y, test_index)
-        #print(masked_logits)
-        y_pred = tf.argmax(masked_logits, axis=-1, output_type=tf.int32)
+        # Everything above this line is the same as the training step before the gradient tape.
+        masked_logits = tf.gather(logits, batch.node_label_index)  # Infer values for the predicted classes
+        y_pred = tf.argmax(masked_logits, axis=-1, output_type=tf.int32)  # Take the highest value as the likely class
         if cfg.dataset.transform == 'ego':
-            masked_labels = tf.cast(tf.gather(batch.node_label,batch.node_label_index), y_pred.dtype)
+            # TODO: Zhihao, please comment this section.
+            masked_labels = tf.cast(tf.gather(batch.node_label, batch.node_label_index), y_pred.dtype)
         else:
             masked_labels = tf.cast(batch.node_label, y_pred.dtype)
         
-        corrects = tf.equal(y_pred, masked_labels)
-        accuracy = tf.reduce_mean(tf.cast(corrects, tf.float32))
+        corrects = tf.equal(y_pred, masked_labels)  # See if the predictions match the labels
+        accuracy = tf.reduce_mean(tf.cast(corrects, tf.float32))  # Calculate the accuracy of the predictions
         accuracy_sum += accuracy
-    accuracy = accuracy_sum / len(loader)
+    accuracy = accuracy_sum / len(loader)  # Calculate the average of all the batches accuracies
     return accuracy
         
-
 
 '''
 remove scheduler
 '''
-def train(loggers, loaders, model, optimizer,datasets):
+
+
+def train(loggers, loaders, model, optimizer, datasets):
     start_epoch = 0
     valid_acc_list = []
     #if cfg.train.auto_resume:
@@ -133,7 +129,7 @@ def train(loggers, loaders, model, optimizer,datasets):
         if not cfg.gnn.layer_type[:3] == 'Tfg':
             train_epoch(loggers[0], loaders[0], model, optimizer)
         else:
-            train_epoch_Tfg(loggers[0], loaders[0], model, optimizer,datasets)
+            train_epoch_Tfg(loggers[0], loaders[0], model, optimizer, datasets)
         #loggers[0].write_epoch(cur_epoch)
         if is_eval_epoch(cur_epoch):
             valid_acc_list_ = []
@@ -141,7 +137,7 @@ def train(loggers, loaders, model, optimizer,datasets):
                 if not cfg.gnn.layer_type[:3] == 'Tfg':
                     eval_epoch(loggers[i], loaders[i], model)
                 else:
-                    valid_acc = eval_epoch_Tfg(loaders[i],model).numpy()
+                    valid_acc = eval_epoch_Tfg(loaders[i], model).numpy()
                     valid_acc_list_.append(valid_acc)
             valid_acc_list.append(sum(valid_acc_list_)/len(valid_acc_list_))
             print(f'epoch {cur_epoch}, acc:{sum(valid_acc_list_)/len(valid_acc_list_)}')

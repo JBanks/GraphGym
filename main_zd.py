@@ -20,27 +20,31 @@ from graphgym.register import train_dict
 
 import tensorflow as tf
 import tf_geometric as tfg
-from TfgIDLayer import IDGCN, IDGAT, IDSAGE, IDGIN
+from TfgIDLayer import IDGCN, IDGAT, IDSAGE, IDGIN  # These are the custom "ID-GNN" layers
 
-repeat = 3
+repeat = 3  # the number of times to run each experiment.
 
 
 class GCNModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gcn0 = tfg.layers.GCN(128, activation=tf.nn.relu)
-        self.gcn1 = tfg.layers.GCN(128, activation=tf.nn.relu)
-        self.gcn2 = tfg.layers.GCN(128, activation=tf.nn.relu)
+        # Build out n GCN layers.  In the paper, they used 3, so we simply hard coded that many layers.
+        self.gcn0 = tfg.layers.GCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gcn1 = tfg.layers.GCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gcn2 = tfg.layers.GCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        # After the GCN layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
                                                , tf.keras.layers.Dense(256, activation='relu')
                                                , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, edge_weight = inputs
+        x, edge_index, edge_weight = inputs  # extract the components from the input list.
+        # Run through our series of GCN layers.
         h = self.gcn0([x, edge_index, edge_weight], cache=cache, training=training, mask=mask)
         h = self.gcn1([h, edge_index, edge_weight], cache=cache, training=training, mask=mask)
         h = self.gcn2([h, edge_index, edge_weight], cache=cache, training=training, mask=mask)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -49,18 +53,23 @@ class IDGCNModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gcn0 = IDGCN(128, activation=tf.nn.relu)
-        self.gcn1 = IDGCN(128, activation=tf.nn.relu)
-        self.gcn2 = IDGCN(128, activation=tf.nn.relu)
+        # Build out n specialized GCN layers.  In the paper, they used 3, so we simply hard coded that many layers.
+        self.gcn0 = IDGCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gcn1 = IDGCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gcn2 = IDGCN(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        # After the specialized GCN layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
                                                , tf.keras.layers.Dense(256, activation='relu')
                                                , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index, edge_weight = inputs
+        x, edge_index, id_index, edge_weight = inputs  # extract the components from the input list.
+        # Run through our series of specialized GCN layers.
+        # These layers require an additional 'id_index' input for processing
         h = self.gcn0([x, edge_index, id_index, edge_weight], cache=cache)  
         h = self.gcn1([h, edge_index, id_index, edge_weight], cache=cache)
         h = self.gcn2([h, edge_index, id_index, edge_weight], cache=cache)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
     
@@ -69,18 +78,22 @@ class GATModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gat0 = tfg.layers.GAT(128, activation=tf.nn.relu)
-        self.gat1 = tfg.layers.GAT(128, activation=tf.nn.relu)
-        self.gat2 = tfg.layers.GAT(128, activation=tf.nn.relu)
+        # Build out n GAT layers.  In the paper, they used 3, so we simply hard coded that many layers.
+        self.gat0 = tfg.layers.GAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gat1 = tfg.layers.GAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gat2 = tfg.layers.GAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        # After the GAT layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
                                                , tf.keras.layers.Dense(256, activation='relu')
                                                , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, _ = inputs
+        x, edge_index, _ = inputs  # extract the components from the input list.
+        # Run through our series of GAT layers.
         h = self.gat0([x, edge_index], training=training, mask=mask)
         h = self.gat1([h, edge_index], training=training, mask=mask)
         h = self.gat2([h, edge_index], training=training, mask=mask)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -89,18 +102,23 @@ class IDGATModel(tf.keras.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gat0 = IDGAT(128, activation=tf.nn.relu)
-        self.gat1 = IDGAT(128, activation=tf.nn.relu)
-        self.gat2 = IDGAT(128, activation=tf.nn.relu)
+        # Build out n specialized GAT layers.  In the paper, they used 3, so we simply hard coded that many layers.
+        self.gat0 = IDGAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gat1 = IDGAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        self.gat2 = IDGAT(units=cfg.gnn.dim_inner, activation=tf.nn.relu)
+        # After the specialized GAT layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten()
                                                , tf.keras.layers.Dense(256, activation='relu')
                                                , tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index, edge_weight = inputs
+        x, edge_index, id_index, edge_weight = inputs  # extract the components from the input list.
+        # Run through our series of specialized GAT layers.
+        # These layers require an additional 'id_index' input for processing
         h = self.gat0([x, edge_index, id_index], training=training)  
         h = self.gat1([h, edge_index, id_index], training=training)
         h = self.gat2([h, edge_index, id_index], training=training)
+        # Run through the inference layer
         h = self.mlp(h)
         return h    
 
@@ -108,18 +126,22 @@ class IDGATModel(tf.keras.Model):
 class SAGEModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Build out n GraphSAGE layers.  In the paper, they used 3.
         self.sage_layers = []
-        for _ in range(3):
-            self.sage_layers.append(tfg.layers.MeanGraphSage(128, activation=tf.nn.relu))
+        for _ in range(cfg.gnn.layers_mp):
+            self.sage_layers.append(tfg.layers.MeanGraphSage(units=cfg.gnn.dim_inner, activation=tf.nn.relu))
+        # After the GraphSAGE layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, _ = inputs
+        x, edge_index, _ = inputs  # extract the components from the input list.
+        # Run through our series of GraphSAGE layers.
         h = x
         for layer in self.sage_layers:
             h = layer([h, edge_index], training=training, cache=cache, mask=mask)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -127,18 +149,23 @@ class SAGEModel(tf.keras.Model):
 class IDSAGEModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Build out n specialized GraphSAGE layers.  In the paper, they used 3.
         self.sage_layers = []
-        for _ in range(3):
-            self.sage_layers.append(IDSAGE(128, activation=tf.nn.relu))
+        for _ in range(cfg.gnn.layers_mp):
+            self.sage_layers.append(IDSAGE(units=cfg.gnn.dim_inner, activation=tf.nn.relu))
+        # After the specialized GraphSAGE layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index, _ = inputs
+        x, edge_index, id_index, _ = inputs  # extract the components from the input list.
+        # Run through our series of specialized GraphSAGE layers.
+        # These layers require an additional 'id_index' input for processing
         h = x
         for layer in self.sage_layers:
             h = layer([h, edge_index, id_index], training=training, cache=cache, mask=mask)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -146,23 +173,30 @@ class IDSAGEModel(tf.keras.Model):
 class GINModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Build out n GIN layers.  In the paper, they used 3.
         self.gin_layers = []
-        for _ in range(3):
-            self.gin_layers.append(tfg.layers.GIN(tf.keras.Sequential([
-                    tf.keras.layers.Dense(128, activation=tf.nn.relu),
-                    tf.keras.layers.Dense(128),
+        for _ in range(cfg.gnn.layers_mp):
+            # The GIN layer must be passed a separate neural network model, which will learn the kernel to use.
+            self.gin_layers.append(tfg.layers.GIN(
+                mlp_model=tf.keras.Sequential([
+                    tf.keras.layers.Dense(cfg.gnn.dim_inner, activation=tf.nn.relu),
+                    tf.keras.layers.Dense(cfg.gnn.dim_inner),
                     tf.keras.layers.BatchNormalization(),
                     tf.keras.layers.Activation(tf.nn.relu)
-                ])))
+                ])
+            ))
+        # After the GIN layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, edge_weight = inputs
+        x, edge_index, edge_weight = inputs  # extract the components from the input list.
+        # Run through our series of GIN layers.
         h = x
         for layer in self.gin_layers:
             h = layer([h, edge_index, edge_weight], training=training, cache=cache, mask=mask)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -170,33 +204,40 @@ class GINModel(tf.keras.Model):
 class IDGINModel(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Build out n specialized GIN layers.  In the paper, they used 3.
         self.gin_layers = []
-        for _ in range(3):
+        for _ in range(cfg.gnn.layers_mp):
+            # GIN models require a MLP layer to learn how to process the kernel.
+            # The ID portion also requires its own MLP.
             self.gin_layers.append(
-                IDGIN(  # Generate IDGIN layers using separate MLPs for the core, and the id portions of the network
-                    tf.keras.Sequential([
-                        tf.keras.layers.Dense(128, activation=tf.nn.relu),
-                        tf.keras.layers.Dense(128),
+                IDGIN(
+                    mlp_model=tf.keras.Sequential([  # GIN MLP
+                        tf.keras.layers.Dense(cfg.gnn.dim_inner, activation=tf.nn.relu),
+                        tf.keras.layers.Dense(cfg.gnn.dim_inner),
                         tf.keras.layers.BatchNormalization(),
                         tf.keras.layers.Activation(tf.nn.relu)
                     ]),
-                    tf.keras.Sequential([
-                        tf.keras.layers.Dense(128, activation=tf.nn.relu),
-                        tf.keras.layers.Dense(128),
+                    mlpid_model=tf.keras.Sequential([  # ID MLP
+                        tf.keras.layers.Dense(cfg.gnn.dim_inner, activation=tf.nn.relu),
+                        tf.keras.layers.Dense(cfg.gnn.dim_inner),
                         tf.keras.layers.BatchNormalization(),
                         tf.keras.layers.Activation(tf.nn.relu)
                     ])
                 )
             )
+        # After the specialized GIN layers, we need to build an inference layer with "num_labels" outputs.
         self.mlp = tf.keras.models.Sequential([tf.keras.layers.Flatten(),  # Run everything through a final inference layer
                                                tf.keras.layers.Dense(256, activation='relu'),
                                                tf.keras.layers.Dense(datasets[0].num_labels)])  # Classify based on labels
 
     def call(self, inputs, training=None, mask=None, cache=None):
-        x, edge_index, id_index, edge_weight = inputs
+        x, edge_index, id_index, edge_weight = inputs  # extract the components from the input list.
+        # Run through our series of specialized GIN layers.
+        # These layers require an additional 'id_index' input for processing
         h = x
         for layer in self.gin_layers:  # Iterate through each of the GIN layers
             h = layer([h, edge_index, id_index, edge_weight], training=training, mask=mask, cache=cache)
+        # Run through the inference layer
         h = self.mlp(h)
         return h
 
@@ -224,20 +265,15 @@ args = parser.parse_args()
 model = args.model
 
 config_path = f'./config/{model}_tf'
-#files = os.listdir(config_path)
-#print(files)
-#for f in files:
-#    if f[-4:] != 'yaml':
-#        files.remove(f)
-#print(files)
+
 datasets = ['CiteSeer', 'Cora', 'ENZYMES', 'PROTEINS', 'ws', 'ba']
 tasks = ['node']
-files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]
+files = [f'{model}_{task}_{dataset}' for dataset in datasets for task in tasks]  # generate a list of files to process
 
-for config_name in files:
+for config_name in files:  # iterate through each file for running different experiments
     acc_lists = []
     max_acc = []
-    for i in range(repeat):
+    for i in range(repeat): # run each experiment "repeat" number of times
         # Load config file
         cfg.merge_from_file(config_path+'/'+config_name+'.yaml')
         #cfg.device = 'cuda'
@@ -260,7 +296,7 @@ for config_name in files:
         loaders = create_loader(datasets)
         meters = create_logger(datasets)
         #model = create_model(datasets)
-        model_func = {
+        model_func = {  # Select the model based on the content of the experiment's YAML file.
             'Tfg-idgcn': IDGCNModel,
             'Tfg-idsage': IDSAGEModel,
             'Tfg-idgat': IDGATModel,
@@ -286,8 +322,9 @@ for config_name in files:
         else:
             train_dict[cfg.train.mode](
                 meters, loaders, model, optimizer, scheduler)
+    # Write the results of the experiment to a file for sharing results.
     layer_type = f'id{cfg.gnn.layer_type}Fast' if cfg.dataset.augment_feature != [] else cfg.gnn.layer_type
     np.savetxt('./' + cfg.out_dir+'/val'+'/middle'+f'/{cfg.model.type}-{layer_type}'+f'_{cfg.dataset.name}.txt', np.array(acc_lists))
-    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}-{layer_typee}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
+    np.savetxt('./' + cfg.out_dir+'/val'+'/final'+f'/{cfg.model.type}-{layer_type}'+f'_{cfg.dataset.name}_avg_acc.txt', np.array([np.mean(max_acc)]))
     print(f'The average validation accuracy of {repeat} rounds is: {np.mean(max_acc)}')
 
